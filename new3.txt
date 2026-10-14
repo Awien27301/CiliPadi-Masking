@@ -1,0 +1,5139 @@
+
+==================================================================
+CILIPADI-MILD FULL 18-ROUND MASKED PERMUTATION
+==================================================================
+
+ENCRYPTION
+--------------------------------------------------------------
+Plaintext  : 0001020304050607 08090a0b0c0d0e0f
+Key        : 0001020304050607 08090a0b0c0d0e0f
+Nonce      : 0001020304050607 08090a0b0c0d0e0f
+AD         : 0001020304050607 08090a0b0c0d0e0f
+Ciphertext : 3fb9e70d3702c712 d407f60f617e43d3
+Tag        : 68b96217dd237301
+
+DECRYPTION
+--------------------------------------------------------------
+Ciphertext : 3fb9e70d3702c712 d407f60f617e43d3
+Key        : 0001020304050607 08090a0b0c0d0e0f
+Nonce      : 0001020304050607 08090a0b0c0d0e0f
+Plaintext  : 0001020304050607 08090a0b0c0d0e0f
+AD         : 0001020304050607 08090a0b0c0d0e0f
+Plaintext  : 0001020304050607 08090a0b0c0d0e0f
+
+  Flow per round:
+    X1 -> F1 -> 2 LED rounds
+    X3 -> F2 -> 2 LED rounds
+    Branch update:
+      X1' = X2 XOR F1(X1)
+      X2' = X3
+      X3' = X4 XOR F2(X3)
+      X4' = X1
+
+  Random masks and ISW fresh random bits change every run.
+
+[REAL INITIAL STATE]
+------------------------------------------------------------------
+  X1                       : 0001020304050607
+  X2                       : 08090a0b0c0d0e0f
+  X3                       : 0001020304050607
+  X4                       : 08090a0b0c0d0e0f
+
+[INITIAL MASK VERIFICATION]
+------------------------------------------------------------------
+  X1 Share 0               : 47eaa7442ab8aa4e
+  X1 Share 1               : 47eba5472ebdac49
+  X1 recombined            : 0001020304050607
+
+  X2 Share 0               : 85b9c58aa8732057
+  X2 Share 1               : 8db0cf81a47e2e58
+  X2 recombined            : 08090a0b0c0d0e0f
+
+  X3 Share 0               : 797c86bb59640d54
+  X3 Share 1               : 797d84b85d610b53
+  X3 recombined            : 0001020304050607
+
+  X4 Share 0               : 723c82fd2aef2b31
+  X4 Share 1               : 7a3588f626e2253e
+  X4 recombined            : 08090a0b0c0d0e0f
+
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 1
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 0001020304050607
+  X2                       : 08090a0b0c0d0e0f
+  X3                       : 0001020304050607
+  X4                       : 08090a0b0c0d0e0f
+
+==================================================================
+ROUND 1 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : 47eaa7442ab8aa4e
+  X1 Share 1               : 47eba5472ebdac49
+  X1 recombined            : 0001020304050607
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    4 7 e a              4 7 e b 
+    a 7 4 4              a 5 4 7 
+    2 a b 8              2 e b d 
+    a a 4 e              a c 4 9 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 0001020304050607
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    4 7 e a              4 7 e b 
+    b 6 4 4              a 5 4 7 
+    0 a b 8              2 e b d 
+    9 b 4 e              a c 4 9 
+  Recombined after AC      : 0001130324053707
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    f d e c              3 1 2 9 
+    a c 1 e              f 7 d 5 
+    a c 7 3              c 5 b 3 
+    f 7 7 c              4 a b 1 
+  Recombined after SC      : ccc55bcb69c0bdcd
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    f d e c              3 1 2 9 
+    c 1 e a              7 d 5 f 
+    7 3 a c              b 3 c 5 
+    c f 7 7              1 4 a b 
+  Recombined after SR      : ccc5bcb5c069dbdc
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    0 b a a              c 7 1 2 
+    9 f e b              d 4 e d 
+    2 b 1 0              9 e 2 1 
+    0 a 8 0              0 3 4 3 
+  Recombined after MCS     : ccb84b06b53109c3
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    0 b a a              c 7 1 2 
+    9 f e b              d 4 e d 
+    2 b 1 0              9 e 2 1 
+    0 a 8 0              0 3 4 3 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : ccb84b06b53109c3
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    0 b a a              c 7 1 2 
+    9 f e b              d 4 e d 
+    2 b 1 0              9 e 2 1 
+    0 a 8 0              0 3 4 3 
+  Recombined after AC      : ccb84b06b53109c3
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    c 4 c c              8 0 4 f 
+    9 5 5 9              0 d 9 3 
+    e 3 a 3              6 3 1 6 
+    1 4 1 e              d a 5 5 
+  Recombined after SC      : 448398ca80b5ce4b
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    c 4 c c              8 0 4 f 
+    5 5 9 9              d 9 3 0 
+    a 3 e 3              1 6 6 3 
+    e 1 4 1              5 d a 5 
+  Recombined after SR      : 44838ca9b580bce4
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    8 2 b 8              3 c b 5 
+    1 2 1 0              c 6 8 3 
+    1 d e e              c 1 7 5 
+    5 b 5 3              4 3 8 e 
+  Recombined after MCS     : be0dd493dc9b18dd
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 82b812101dee5b53
+  F Share 1                : 3cb5c683c175438e
+  F Share0 XOR Share1      : be0dd493dc9b18dd
+
+==================================================================
+ROUND 1 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : 797c86bb59640d54
+  X3 Share 1               : 797d84b85d610b53
+  X3 recombined            : 0001020304050607
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    7 9 7 c              7 9 7 d 
+    8 6 b b              8 4 b 8 
+    5 9 6 4              5 d 6 1 
+    0 d 5 4              0 b 5 3 
+  Recombined input (X3 -> F2(X3) LED Round 1) : 0001020304050607
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    7 9 7 c              7 9 7 d 
+    a 7 b b              8 4 b 8 
+    7 9 6 4              5 d 6 1 
+    3 c 5 4              0 b 5 3 
+  Recombined after AC      : 0001230324053707
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    f b 9 6              3 7 5 3 
+    7 7 0 b              1 c c 0 
+    1 e 0 5              7 7 c 5 
+    b c a 4              0 1 6 9 
+  Recombined after SC      : ccc56bcb69c0bdcd
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    f b 9 6              3 7 5 3 
+    7 0 b 7              c c 0 1 
+    0 5 1 e              c 5 7 7 
+    4 b c a              9 0 1 6 
+  Recombined after SR      : ccc5bcb6c069dbdc
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    6 5 0 4              a 9 b f 
+    b a 0 e              f 1 0 2 
+    d 1 8 0              6 4 b 0 
+    9 a 6 5              9 3 a 0 
+  Recombined after MCS     : ccbb4b0cb53009c5
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    6 5 0 4              a 9 b f 
+    b a 0 e              f 1 0 2 
+    d 1 8 0              6 4 b 0 
+    9 a 6 5              9 3 a 0 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : ccbb4b0cb53009c5
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    6 5 0 4              a 9 b f 
+    b a 0 e              f 1 0 2 
+    d 1 8 0              6 4 b 0 
+    9 a 6 5              9 3 a 0 
+  Recombined after AC      : ccbb4b0cb53009c5
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    2 5 e 4              6 1 6 c 
+    e 0 f d              7 8 3 9 
+    7 7 9 3              f 7 2 f 
+    c 5 3 f              0 b 7 f 
+  Recombined after SC      : 448898c480bcce40
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    2 5 e 4              6 1 6 c 
+    0 f d e              8 3 9 7 
+    9 3 7 7              2 f f 7 
+    f c 5 3              f 0 b 7 
+  Recombined after SR      : 44888c49bc800ce4
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    4 5 4 5              a a a 2 
+    c b 4 6              e 4 f 2 
+    e f a a              f 6 8 8 
+    9 8 c 2              1 e e a 
+  Recombined after MCS     : efe72fb419228628
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 4545cb46efaa98c2
+  F Share 1                : aaa2e4f2f6881eea
+  F Share0 XOR Share1      : efe72fb419228628
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : be0dd493dc9b18dd
+  F1 expected              : be0dd493dc9b18dd
+  F1 verification          : PASS
+
+  F2 recombined            : efe72fb419228628
+  F2 expected              : efe72fb419228628
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : b604de98d09616d2
+  X2'                      : 0001020304050607
+  X3'                      : e7ee25bf152f8827
+  X4'                      : 0001020304050607
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : b604de98d09616d2
+  X1 expected              : b604de98d09616d2
+  X1 verification          : PASS
+
+  X2 recombined            : 0001020304050607
+  X2 expected              : 0001020304050607
+  X2 verification          : PASS
+
+  X3 recombined            : e7ee25bf152f8827
+  X3 expected              : e7ee25bf152f8827
+  X3 verification          : PASS
+
+  X4 recombined            : 0001020304050607
+  X4 expected              : 0001020304050607
+  X4 verification          : PASS
+
+  ROUND 1 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 2
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : b604de98d09616d2
+  X2                       : 0001020304050607
+  X3                       : e7ee25bf152f8827
+  X4                       : 0001020304050607
+
+==================================================================
+ROUND 2 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : 0701d79ab59d7b04
+  X1 Share 1               : b1050902650b6dd6
+  X1 recombined            : b604de98d09616d2
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    0 7 0 1              b 1 0 5 
+    d 7 9 a              0 9 0 2 
+    b 5 9 d              6 5 0 b 
+    7 b 0 4              6 d d 6 
+  Recombined input (X1 -> F1(X1) LED Round 1) : b604de98d09616d2
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    0 7 0 1              b 1 0 5 
+    c 4 9 a              0 9 0 2 
+    9 5 9 d              6 5 0 b 
+    4 8 0 4              6 d d 6 
+  Recombined after AC      : b604cd98f09625d2
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    b 9 a 4              3 3 6 d 
+    a d 3 9              e a d a 
+    d a 9 2              f 6 7 8 
+    b 4 b f              d 4 c 9 
+  Recombined after SC      : 8ac947e32cea6076
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    b 9 a 4              3 3 6 d 
+    d 3 9 a              a d a e 
+    9 2 d a              7 8 f 6 
+    f b 4 b              9 d 4 c 
+  Recombined after SR      : 8ac97e34ea2c6607
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    b 0 6 b              9 b 4 8 
+    0 b b 4              9 5 1 3 
+    8 6 c 8              6 4 7 2 
+    1 3 b a              6 8 b f 
+  Recombined after MCS     : 2b239ea7e2ba7b05
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    b 0 6 b              9 b 4 8 
+    0 b b 4              9 5 1 3 
+    8 6 c 8              6 4 7 2 
+    1 3 b a              6 8 b f 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : 2b239ea7e2ba7b05
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    b 0 6 b              9 b 4 8 
+    0 b b 4              9 5 1 3 
+    8 6 c 8              6 4 7 2 
+    1 3 b a              6 8 b f 
+  Recombined after AC      : 2b239ea7e2ba7b05
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    0 3 5 2              6 b 3 9 
+    9 1 9 9              7 0 6 4 
+    3 5 f 5              2 3 7 a 
+    0 d a 8              d 5 6 8 
+  Recombined after SC      : 686be1fd168fd8c0
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    0 3 5 2              6 b 3 9 
+    1 9 9 9              0 6 4 7 
+    f 5 3 5              7 a 2 3 
+    8 0 d a              8 d 5 6 
+  Recombined after SR      : 686b1fde8f160d8c
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    f f 1 c              6 2 6 f 
+    5 a a b              8 c 7 d 
+    6 d 4 3              8 c f e 
+    f 1 f 1              0 3 2 2 
+  Recombined after MCS     : 9d73d6d6e1bdf2d3
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : ff1c5aab6d43f1f1
+  F Share 1                : 626f8c7d8cfe0322
+  F Share0 XOR Share1      : 9d73d6d6e1bdf2d3
+
+==================================================================
+ROUND 2 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : 377949bbc545b3f3
+  X3 Share 1               : d0976c04d06a3bd4
+  X3 recombined            : e7ee25bf152f8827
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    3 7 7 9              d 0 9 7 
+    4 9 b b              6 c 0 4 
+    c 5 4 5              d 0 6 a 
+    b 3 f 3              3 b d 4 
+  Recombined input (X3 -> F2(X3) LED Round 1) : e7ee25bf152f8827
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    3 7 7 9              d 0 9 7 
+    6 a b b              6 c 0 4 
+    e 5 4 5              d 0 6 a 
+    8 0 f 3              3 b d 4 
+  Recombined after AC      : e7ee06bf352fbb27
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    1 7 9 4              0 a 8 5 
+    0 3 3 9              c 9 b b 
+    c 6 5 b              7 6 3 9 
+    6 1 4 9              e 9 2 4 
+  Recombined after SC      : 1d11ca82b062886d
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    1 7 9 4              0 a 8 5 
+    3 3 9 0              9 b b c 
+    5 b c 6              3 9 7 6 
+    9 6 1 4              4 e 9 2 
+  Recombined after SR      : 1d11a82c62b0d886
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    c 5 2 7              7 b 2 3 
+    3 1 8 0              7 9 8 1 
+    3 4 3 1              8 8 1 d 
+    e 4 3 6              9 4 1 0 
+  Recombined after MCS     : be044801bc2c7026
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    c 5 2 7              7 b 2 3 
+    3 1 8 0              7 9 8 1 
+    3 4 3 1              8 8 1 d 
+    e 4 3 6              9 4 1 0 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : be044801bc2c7026
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    c 5 2 7              7 b 2 3 
+    3 1 8 0              7 9 8 1 
+    3 4 3 1              8 8 1 d 
+    e 4 3 6              9 4 1 0 
+  Recombined after AC      : be044801bc2c7026
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    3 2 4 b              b 3 8 2 
+    4 c b 1              d f 7 4 
+    1 e 2 6              9 a 4 2 
+    8 f c a              5 3 a 0 
+  Recombined after SC      : 81c993c58464dc6a
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    3 2 4 b              b 3 8 2 
+    c b 1 4              f 7 4 d 
+    2 6 1 e              4 2 9 a 
+    a 8 f c              0 5 3 a 
+  Recombined after SR      : 81c93c596484adc6
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    3 c d a              d 5 5 5 
+    6 4 1 1              4 d 6 6 
+    8 0 0 4              2 e 7 2 
+    2 2 6 5              1 4 b 3 
+  Recombined after MCS     : e98f2977ae7636d6
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 3cda641180042265
+  F Share 1                : d5554d662e7214b3
+  F Share0 XOR Share1      : e98f2977ae7636d6
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : 9d73d6d6e1bdf2d3
+  F1 expected              : 9d73d6d6e1bdf2d3
+  F1 verification          : PASS
+
+  F2 recombined            : e98f2977ae7636d6
+  F2 expected              : e98f2977ae7636d6
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 9d72d4d5e5b8f4d4
+  X2'                      : e7ee25bf152f8827
+  X3'                      : e98e2b74aa7330d1
+  X4'                      : b604de98d09616d2
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 9d72d4d5e5b8f4d4
+  X1 expected              : 9d72d4d5e5b8f4d4
+  X1 verification          : PASS
+
+  X2 recombined            : e7ee25bf152f8827
+  X2 expected              : e7ee25bf152f8827
+  X2 verification          : PASS
+
+  X3 recombined            : e98e2b74aa7330d1
+  X3 expected              : e98e2b74aa7330d1
+  X3 verification          : PASS
+
+  X4 recombined            : b604de98d09616d2
+  X4 expected              : b604de98d09616d2
+  X4 verification          : PASS
+
+  ROUND 2 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 3
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 9d72d4d5e5b8f4d4
+  X2                       : e7ee25bf152f8827
+  X3                       : e98e2b74aa7330d1
+  X4                       : b604de98d09616d2
+
+==================================================================
+ROUND 3 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : 8660dc103427fca5
+  X1 Share 1               : 1b1208c5d19f0871
+  X1 recombined            : 9d72d4d5e5b8f4d4
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    8 6 6 0              1 b 1 2 
+    d c 1 0              0 8 c 5 
+    3 4 2 7              d 1 9 f 
+    f c a 5              0 8 7 1 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 9d72d4d5e5b8f4d4
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    8 6 6 0              1 b 1 2 
+    c b 1 0              0 8 c 5 
+    1 4 2 7              d 1 9 f 
+    c b a 5              0 8 7 1 
+  Recombined after AC      : 9d72c3d5c5b8c3d4
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    d e e c              3 9 3 a 
+    c 1 5 8              8 a 2 8 
+    9 6 7 e              d 6 f d 
+    6 e d 3              2 5 a a 
+  Recombined after SC      : e7d64b7040834b79
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    d e e c              3 9 3 a 
+    1 5 8 c              a 2 8 8 
+    7 e 9 6              f d d 6 
+    3 6 e d              a 2 5 a 
+  Recombined after SR      : e7d6b704834094b7
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    8 b b c              c d 7 d 
+    6 0 5 1              d 8 f e 
+    3 e 3 f              1 9 7 7 
+    e f a 2              9 7 3 2 
+  Recombined after MCS     : 46c1b8af27487890
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    8 b b c              c d 7 d 
+    6 0 5 1              d 8 f e 
+    3 e 3 f              1 9 7 7 
+    e f a 2              9 7 3 2 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : 46c1b8af27487890
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    8 b b c              c d 7 d 
+    6 0 5 1              d 8 f e 
+    3 e 3 f              1 9 7 7 
+    e f a 2              9 7 3 2 
+  Recombined after AC      : 46c1b8af27487890
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    e 9 7 d              7 3 3 8 
+    0 f a 7              8 c 5 5 
+    9 c 8 3              f 1 1 0 
+    b 6 f e              6 5 1 2 
+  Recombined after SC      : 9a4583f26d93d3ec
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    e 9 7 d              7 3 3 8 
+    f a 7 0              c 5 5 8 
+    8 3 9 c              1 0 f 1 
+    e b 6 f              2 6 5 1 
+  Recombined after SR      : 9a453f28936dcd3e
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    e b 5 7              5 5 e e 
+    1 d 0 f              a 1 d a 
+    5 b e 9              b e a d 
+    b d 1 2              f 3 7 4 
+  Recombined after MCS     : beb9bcd5e5444e66
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : eb571d0f5be9bd12
+  F Share 1                : 55eea1dabeadf374
+  F Share0 XOR Share1      : beb9bcd5e5444e66
+
+==================================================================
+ROUND 3 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : 7b30c355aabc882b
+  X3 Share 1               : 92bee82100cfb8fa
+  X3 recombined            : e98e2b74aa7330d1
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    7 b 3 0              9 2 b e 
+    c 3 5 5              e 8 2 1 
+    a a b c              0 0 c f 
+    8 8 2 b              b 8 f a 
+  Recombined input (X3 -> F2(X3) LED Round 1) : e98e2b74aa7330d1
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    7 b 3 0              9 2 b e 
+    e 4 5 5              e 8 2 1 
+    8 a b c              0 0 c f 
+    b f 2 b              b 8 f a 
+  Recombined after AC      : e98e0c748a7307d1
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    2 7 1 f              3 9 2 e 
+    5 2 5 4              9 6 8 d 
+    c 6 0 e              f 9 d 5 
+    9 f 7 2              5 2 0 7 
+  Recombined after SC      : 1e31c4d93fdbcd75
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    2 7 1 f              3 9 2 e 
+    2 5 4 5              6 8 d 9 
+    0 e c 6              d 5 f 9 
+    2 9 f 7              7 5 2 0 
+  Recombined after SR      : 1e314d9cdb3f5cd7
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    e 4 6 e              d a c 5 
+    3 0 e 0              1 e 1 1 
+    b c 9 3              d a 2 a 
+    5 d 1 7              9 5 2 0 
+  Recombined after MCS     : 3eab2ef166b9c837
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    e 4 6 e              d a c 5 
+    3 0 e 0              1 e 1 1 
+    b c 9 3              d a 2 a 
+    5 d 1 7              9 5 2 0 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : 3eab2ef166b9c837
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    e 4 6 e              d a c 5 
+    3 0 e 0              1 e 1 1 
+    b c 9 3              d a 2 a 
+    5 d 1 7              9 5 2 0 
+  Recombined after AC      : 3eab2ef166b9c837
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    6 3 b 2              d 2 4 a 
+    2 4 d 4              4 5 f 1 
+    0 a 7 0              a 0 f e 
+    0 8 d 8              4 b 6 5 
+  Recombined after SC      : b1f86125aa8e43bd
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    6 3 b 2              d 2 4 a 
+    4 d 4 2              5 f 1 4 
+    7 0 0 a              f e a 0 
+    8 0 8 d              5 4 b 6 
+  Recombined after SR      : b1f812568eaad43b
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    2 1 d 4              3 0 0 6 
+    3 3 9 3              4 f b 3 
+    5 4 0 d              2 4 0 c 
+    8 f a a              8 6 f 0 
+  Recombined after MCS     : 11d27c207001095a
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 21d43393540d8faa
+  F Share 1                : 30064fb3240c86f0
+  F Share0 XOR Share1      : 11d27c207001095a
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : beb9bcd5e5444e66
+  F1 expected              : beb9bcd5e5444e66
+  F1 verification          : PASS
+
+  F2 recombined            : 11d27c207001095a
+  F2 expected              : 11d27c207001095a
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 5957996af06bc641
+  X2'                      : e98e2b74aa7330d1
+  X3'                      : a7d6a2b8a0971f88
+  X4'                      : 9d72d4d5e5b8f4d4
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 5957996af06bc641
+  X1 expected              : 5957996af06bc641
+  X1 verification          : PASS
+
+  X2 recombined            : e98e2b74aa7330d1
+  X2 expected              : e98e2b74aa7330d1
+  X2 verification          : PASS
+
+  X3 recombined            : a7d6a2b8a0971f88
+  X3 expected              : a7d6a2b8a0971f88
+  X3 verification          : PASS
+
+  X4 recombined            : 9d72d4d5e5b8f4d4
+  X4 expected              : 9d72d4d5e5b8f4d4
+  X4 verification          : PASS
+
+  ROUND 3 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 4
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 5957996af06bc641
+  X2                       : e98e2b74aa7330d1
+  X3                       : a7d6a2b8a0971f88
+  X4                       : 9d72d4d5e5b8f4d4
+
+==================================================================
+ROUND 4 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : dc2e54b49eac0ee1
+  X1 Share 1               : 8579cdde6ec7c8a0
+  X1 recombined            : 5957996af06bc641
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    d c 2 e              8 5 7 9 
+    5 4 b 4              c d d e 
+    9 e a c              6 e c 7 
+    0 e e 1              c 8 a 0 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 5957996af06bc641
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    d d 2 e              8 5 7 9 
+    4 3 b 4              c d d e 
+    b f a c              6 e c 7 
+    3 9 e 1              c 8 a 0 
+  Recombined after AC      : 58578e6ad16bf141
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    b 9 a 5              b a a 8 
+    4 6 e 7              7 7 4 8 
+    6 0 d d              1 5 7 5 
+    9 8 e 2              b d 7 7 
+  Recombined after SC      : 030d31af75a82595
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    b 9 a 5              b a a 8 
+    6 e 7 4              7 4 8 7 
+    d d 6 0              7 5 1 5 
+    2 9 8 e              7 b d 7 
+  Recombined after SR      : 030d1af3a8755259
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    1 4 6 c              d 5 d 5 
+    0 9 6 7              f 9 7 e 
+    1 1 3 b              c 7 e 5 
+    b 5 a a              4 0 d f 
+  Recombined after MCS     : c1b9f019d6def575
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    1 4 6 c              d 5 d 5 
+    0 9 6 7              f 9 7 e 
+    1 1 3 b              c 7 e 5 
+    b 5 a a              4 0 d f 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : c1b9f019d6def575
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    1 4 6 c              d 5 d 5 
+    0 9 6 7              f 9 7 e 
+    1 1 3 b              c 7 e 5 
+    b 5 a a              4 0 d f 
+  Recombined after AC      : c1b9f019d6def575
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    e 5 4 7              a 0 c 9 
+    3 4 c 5              1 8 9 b 
+    f a f 5              8 0 8 4 
+    8 d 2 c              a d f c 
+  Recombined after SC      : 458e2c5e7a7120d0
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    e 5 4 7              a 0 c 9 
+    4 c 5 3              8 9 b 1 
+    f 5 f a              8 4 8 0 
+    c 8 d 2              c a d f 
+  Recombined after SR      : 458ec5e2717a020d
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    f 2 2 f              e 6 4 e 
+    a 7 5 f              a d 3 6 
+    f 5 a c              2 c 5 c 
+    0 0 e 1              8 a 9 0 
+  Recombined after MCS     : 14610a69d9f08a71
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : f22fa75ff5ac00e1
+  F Share 1                : e64ead362c5c8a90
+  F Share0 XOR Share1      : 14610a69d9f08a71
+
+==================================================================
+ROUND 4 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : 26d5e409e190f4ae
+  X3 Share 1               : 810346b14107eb26
+  X3 recombined            : a7d6a2b8a0971f88
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    2 6 d 5              8 1 0 3 
+    e 4 0 9              4 6 b 1 
+    e 1 9 0              4 1 0 7 
+    f 4 a e              e b 2 6 
+  Recombined input (X3 -> F2(X3) LED Round 1) : a7d6a2b8a0971f88
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    2 7 d 5              8 1 0 3 
+    c 3 0 9              4 6 b 1 
+    c 0 9 0              4 1 0 7 
+    c 3 a e              e b 2 6 
+  Recombined after AC      : a6d685b881972888
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    9 e f 6              6 4 8 c 
+    b d 6 8              8 d e b 
+    d a 9 3              e f 7 e 
+    d b 1 6              b 8 2 5 
+  Recombined after SC      : fa7a308335ed6333
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    9 e f 6              6 4 8 c 
+    d 6 8 b              d e b 8 
+    9 3 d a              7 e e f 
+    6 d b 1              5 b 8 2 
+  Recombined after SR      : fa7a0833ed353633
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    2 4 d 5              2 7 1 4 
+    0 9 7 8              8 8 5 5 
+    0 8 d 6              d b d 9 
+    9 7 0 e              f b 4 7 
+  Recombined after MCS     : 03c1812dd30f6c49
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    2 4 d 5              2 7 1 4 
+    0 9 7 8              8 8 5 5 
+    0 8 d 6              d b d 9 
+    9 7 0 e              f b 4 7 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : 03c1812dd30f6c49
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    2 4 d 5              2 7 1 4 
+    0 9 7 8              8 8 5 5 
+    0 8 d 6              d b d 9 
+    9 7 0 e              f b 4 7 
+  Recombined after AC      : 03c1812dd30f6c49
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    d 5 9 c              1 e d 9 
+    1 4 d 3              2 1 b 4 
+    f 2 3 f              8 9 f d 
+    2 8 2 b              8 c b 5 
+  Recombined after SC      : cb4535677bc2a49e
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    d 5 9 c              1 e d 9 
+    4 d 3 1              1 b 4 2 
+    3 f f 2              f d 8 9 
+    b 2 8 2              5 8 c b 
+  Recombined after SR      : cb455673c27bea49
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    6 3 f 4              2 c d 4 
+    9 c d a              5 f 9 c 
+    a 6 5 5              2 f 2 a 
+    a c a 1              b a d 2 
+  Recombined after MCS     : 4f20c346897f1673
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 63f49cdaa655aca1
+  F Share 1                : 2cd45f9c2f2abad2
+  F Share0 XOR Share1      : 4f20c346897f1673
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : 14610a69d9f08a71
+  F1 expected              : 14610a69d9f08a71
+  F1 verification          : PASS
+
+  F2 recombined            : 4f20c346897f1673
+  F2 expected              : 4f20c346897f1673
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : fdef211d7383baa0
+  X2'                      : a7d6a2b8a0971f88
+  X3'                      : d25217936cc7e2a7
+  X4'                      : 5957996af06bc641
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : fdef211d7383baa0
+  X1 expected              : fdef211d7383baa0
+  X1 verification          : PASS
+
+  X2 recombined            : a7d6a2b8a0971f88
+  X2 expected              : a7d6a2b8a0971f88
+  X2 verification          : PASS
+
+  X3 recombined            : d25217936cc7e2a7
+  X3 expected              : d25217936cc7e2a7
+  X3 verification          : PASS
+
+  X4 recombined            : 5957996af06bc641
+  X4 expected              : 5957996af06bc641
+  X4 verification          : PASS
+
+  ROUND 4 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 5
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : fdef211d7383baa0
+  X2                       : a7d6a2b8a0971f88
+  X3                       : d25217936cc7e2a7
+  X4                       : 5957996af06bc641
+
+==================================================================
+ROUND 5 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : 891f640a5f1088ca
+  X1 Share 1               : 74f045172c93326a
+  X1 recombined            : fdef211d7383baa0
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    8 9 1 f              7 4 f 0 
+    6 4 0 a              4 5 1 7 
+    5 f 1 0              2 c 9 3 
+    8 8 c a              3 2 6 a 
+  Recombined input (X1 -> F1(X1) LED Round 1) : fdef211d7383baa0
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    8 a 1 f              7 4 f 0 
+    7 3 0 a              4 5 1 7 
+    7 c 1 0              2 c 9 3 
+    b f c a              3 2 6 a 
+  Recombined after AC      : feef361d50838da0
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    1 f 4 d              3 e 5 f 
+    7 a 8 b              c 0 d c 
+    7 8 c 9              7 4 f 2 
+    8 7 4 4              b 0 b 8 
+  Recombined after SC      : 2112ba570c3b37fc
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    1 f 4 d              3 e 5 f 
+    a 8 b 7              0 d c c 
+    c 9 7 8              f 2 7 4 
+    4 8 7 4              8 b 0 b 
+  Recombined after SR      : 2112a57b3b0cc37f
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    d 3 8 d              2 1 5 8 
+    3 a 0 6              8 4 8 7 
+    e b b 7              6 9 6 5 
+    7 7 2 c              b 2 a 6 
+  Recombined after MCS     : f2d5be8182d2c58a
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    d 3 8 d              2 1 5 8 
+    3 a 0 6              8 4 8 7 
+    e b b 7              6 9 6 5 
+    7 7 2 c              b 2 a 6 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : f2d5be8182d2c58a
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    d 3 8 d              2 1 5 8 
+    3 a 0 6              8 4 8 7 
+    e b b 7              6 9 6 5 
+    7 7 2 c              b 2 a 6 
+  Recombined after AC      : f2d5be8182d2c58a
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    0 d 0 7              2 b 7 7 
+    e 1 3 6              6 0 0 3 
+    c 9 4 1              f f 3 7 
+    5 e 4 7              1 e 7 8 
+  Recombined after SC      : 267081353676403f
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    0 d 0 7              2 b 7 7 
+    1 3 6 e              0 0 3 6 
+    4 1 c 9              3 7 f f 
+    7 5 e 4              8 1 e 7 
+  Recombined after SR      : 267013587636f403
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    7 a 2 8              d 6 e a 
+    0 0 c f              9 9 3 d 
+    a 6 4 8              c 3 e 0 
+    f 1 c 5              1 5 a c 
+  Recombined after MCS     : acc299f265a8e469
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 7a2800cfa648f1c5
+  F Share 1                : d6ea993dc3e015ac
+  F Share0 XOR Share1      : acc299f265a8e469
+
+==================================================================
+ROUND 5 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : e59440ca92725004
+  X3 Share 1               : 37c65759feb5b2a3
+  X3 recombined            : d25217936cc7e2a7
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    e 5 9 4              3 7 c 6 
+    4 0 c a              5 7 5 9 
+    9 2 7 2              f e b 5 
+    5 0 0 4              b 2 a 3 
+  Recombined input (X3 -> F2(X3) LED Round 1) : d25217936cc7e2a7
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    e 6 9 4              3 7 c 6 
+    6 7 c a              5 7 5 9 
+    b 1 7 2              f e b 5 
+    6 7 0 4              b 2 a 3 
+  Recombined after AC      : d15230934fc7d5a7
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    d 9 a 0              a c a 6 
+    1 3 d b              a f 3 0 
+    a 5 7 1              3 7 3 c 
+    e 1 9 2              9 1 6 f 
+  Recombined after SC      : 7506bceb924d70fd
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    d 9 a 0              a c a 6 
+    3 d b 1              f 3 0 a 
+    7 1 a 5              3 c 3 7 
+    2 e 1 9              f 9 1 6 
+  Recombined after SR      : 7506cebb4d92d70f
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    8 2 0 a              a c a 3 
+    c b 2 7              0 a 6 3 
+    5 b b 7              4 0 6 9 
+    1 f 5 8              b 9 e f 
+  Recombined after MCS     : 2ea9c1441bdea6b7
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    8 2 0 a              a c a 3 
+    c b 2 7              0 a 6 3 
+    5 b b 7              4 0 6 9 
+    1 f 5 8              b 9 e f 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : 2ea9c1441bdea6b7
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    8 2 0 a              a c a 3 
+    c b 2 7              0 a 6 3 
+    5 b b 7              4 0 6 9 
+    1 f 5 8              b 9 e f 
+  Recombined after AC      : 2ea9c1441bdea6b7
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    6 7 6 c              0 6 9 2 
+    c 9 5 5              8 c c c 
+    3 0 d 0              6 8 a 1 
+    0 c 9 8              f 6 1 5 
+  Recombined after SC      : 61fe45995871fa8d
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    6 7 6 c              0 6 9 2 
+    9 5 5 c              c c c 8 
+    d 0 3 0              a 1 6 8 
+    8 0 c 9              5 f 6 1 
+  Recombined after SR      : 61fe59947158dfa8
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    8 a 3 8              1 8 e 1 
+    f 0 9 7              7 a 0 e 
+    7 7 7 4              7 f 2 a 
+    d 4 9 c              6 b 1 d 
+  Recombined after MCS     : 92d98a99085ebf81
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 8a38f0977774d49c
+  F Share 1                : 18e17a0e7f2a6b1d
+  F Share0 XOR Share1      : 92d98a99085ebf81
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : acc299f265a8e469
+  F1 expected              : acc299f265a8e469
+  F1 verification          : PASS
+
+  F2 recombined            : 92d98a99085ebf81
+  F2 expected              : 92d98a99085ebf81
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 0b143b4ac53ffbe1
+  X2'                      : d25217936cc7e2a7
+  X3'                      : cb8e13f3f83579c0
+  X4'                      : fdef211d7383baa0
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 0b143b4ac53ffbe1
+  X1 expected              : 0b143b4ac53ffbe1
+  X1 verification          : PASS
+
+  X2 recombined            : d25217936cc7e2a7
+  X2 expected              : d25217936cc7e2a7
+  X2 verification          : PASS
+
+  X3 recombined            : cb8e13f3f83579c0
+  X3 expected              : cb8e13f3f83579c0
+  X3 verification          : PASS
+
+  X4 recombined            : fdef211d7383baa0
+  X4 expected              : fdef211d7383baa0
+  X4 verification          : PASS
+
+  ROUND 5 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 6
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 0b143b4ac53ffbe1
+  X2                       : d25217936cc7e2a7
+  X3                       : cb8e13f3f83579c0
+  X4                       : fdef211d7383baa0
+
+==================================================================
+ROUND 6 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : 5cfde4c647d8056b
+  X1 Share 1               : 57e9df8c82e7fe8a
+  X1 recombined            : 0b143b4ac53ffbe1
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    5 c f d              5 7 e 9 
+    e 4 c 6              d f 8 c 
+    4 7 d 8              8 2 e 7 
+    0 5 6 b              f e 8 a 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 0b143b4ac53ffbe1
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    5 b f d              5 7 e 9 
+    f 2 c 6              d f 8 c 
+    6 0 d 8              8 2 e 7 
+    3 3 6 b              f e 8 a 
+  Recombined after AC      : 0c142d4ae23fcde1
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    2 1 c 1              e 5 9 8 
+    7 6 c 4              1 1 5 b 
+    0 0 2 4              1 6 9 6 
+    5 0 8 0              1 7 9 5 
+  Recombined after SC      : c459679f16b24715
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    2 1 c 1              e 5 9 8 
+    6 c 4 7              1 5 b 1 
+    2 4 0 0              9 6 1 6 
+    0 5 0 8              5 1 7 9 
+  Recombined after SR      : c45979f6b2165471
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    a a 1 0              7 c 5 a 
+    e c 1 c              9 8 f 4 
+    0 a 0 3              8 2 4 d 
+    5 1 3 b              2 f f 9 
+  Recombined after MCS     : d64a74e8884e7ec2
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    a a 1 0              7 c 5 a 
+    e c 1 c              9 8 f 4 
+    0 a 0 3              8 2 4 d 
+    5 1 3 b              2 f f 9 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : d64a74e8884e7ec2
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    a a 1 0              7 c 5 a 
+    e c 1 c              9 8 f 4 
+    0 a 0 3              8 2 4 d 
+    5 1 3 b              2 f f 9 
+  Recombined after AC      : d64a74e8884e7ec2
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    d 9 5 f              a 3 c 0 
+    d e 7 e              0 7 6 d 
+    d d e a              e e 7 b 
+    7 0 3 7              a 1 7 1 
+  Recombined after SC      : 7a9fd9133391d146
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    d 9 5 f              a 3 c 0 
+    e 7 e d              7 6 d 0 
+    e a d d              7 b e e 
+    7 7 0 3              1 a 1 7 
+  Recombined after SR      : 7a9f913d91336d14
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    e c 0 b              5 8 5 1 
+    2 0 0 f              0 4 7 2 
+    1 2 1 a              4 b 8 c 
+    7 7 2 d              9 b c 1 
+  Recombined after MCS     : b45a247d5996ecec
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : ec0b200f121a772d
+  F Share 1                : 585104724b8c9bc1
+  F Share0 XOR Share1      : b45a247d5996ecec
+
+==================================================================
+ROUND 6 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : 5616a423e9d8da7d
+  X3 Share 1               : 9d98b7d011eda3bd
+  X3 recombined            : cb8e13f3f83579c0
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    5 6 1 6              9 d 9 8 
+    a 4 2 3              b 7 d 0 
+    e 9 d 8              1 1 e d 
+    d a 7 d              a 3 b d 
+  Recombined input (X3 -> F2(X3) LED Round 1) : cb8e13f3f83579c0
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    5 1 1 6              9 d 9 8 
+    8 2 2 3              b 7 d 0 
+    c e d 8              1 1 e d 
+    e c 7 d              a 3 b d 
+  Recombined after AC      : cc8e35f3df354fc0
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    1 b 3 e              5 f 0 f 
+    0 5 b f              b 5 9 4 
+    b e 2 5              c c 9 5 
+    4 e 5 9              d c 1 5 
+  Recombined after SC      : 4431b02b72b0924c
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    1 b 3 e              5 f 0 f 
+    5 b f 0              5 9 4 b 
+    2 5 b e              9 5 c c 
+    9 4 e 5              5 d c 1 
+  Recombined after SR      : 443102bbb072c924
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    4 3 9 8              9 3 4 b 
+    c 1 c 7              5 8 c 1 
+    2 7 e 5              c f a 3 
+    9 c 0 b              f c d b 
+  Recombined after MCS     : d0d39906e84660d0
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    4 3 9 8              9 3 4 b 
+    c 1 c 7              5 8 c 1 
+    2 7 e 5              c f a 3 
+    9 c 0 b              f c d b 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : d0d39906e84660d0
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    4 3 9 8              9 3 4 b 
+    c 1 c 7              5 8 c 1 
+    2 7 e 5              c f a 3 
+    9 c 0 b              f c d b 
+  Recombined after AC      : d0d39906e84660d0
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    d 6 d d              a a a 6 
+    9 b 0 8              7 5 c 2 
+    8 6 e 9              9 5 7 3 
+    4 5 3 e              e 9 4 2 
+  Recombined after SC      : 7c7beeca139aac7c
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    d 6 d d              a a a 6 
+    b 0 8 9              5 c 2 7 
+    e 9 8 6              7 3 9 5 
+    e 4 5 3              2 e 9 4 
+  Recombined after SR      : 7c7becae9a13cac7
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    a 2 0 2              1 b c e 
+    c 5 4 6              6 c b d 
+    f 8 b 0              3 c 5 5 
+    1 8 a 2              3 6 1 e 
+  Recombined after MCS     : b9cca9fbc4e52ebc
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : a202c546f8b018a2
+  F Share 1                : 1bce6cbd3c55361e
+  F Share0 XOR Share1      : b9cca9fbc4e52ebc
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : b45a247d5996ecec
+  F1 expected              : b45a247d5996ecec
+  F1 verification          : PASS
+
+  F2 recombined            : b9cca9fbc4e52ebc
+  F2 expected              : b9cca9fbc4e52ebc
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 660833ee35510e4b
+  X2'                      : cb8e13f3f83579c0
+  X3'                      : 442388e6b766941c
+  X4'                      : 0b143b4ac53ffbe1
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 660833ee35510e4b
+  X1 expected              : 660833ee35510e4b
+  X1 verification          : PASS
+
+  X2 recombined            : cb8e13f3f83579c0
+  X2 expected              : cb8e13f3f83579c0
+  X2 verification          : PASS
+
+  X3 recombined            : 442388e6b766941c
+  X3 expected              : 442388e6b766941c
+  X3 verification          : PASS
+
+  X4 recombined            : 0b143b4ac53ffbe1
+  X4 expected              : 0b143b4ac53ffbe1
+  X4 verification          : PASS
+
+  ROUND 6 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 7
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 660833ee35510e4b
+  X2                       : cb8e13f3f83579c0
+  X3                       : 442388e6b766941c
+  X4                       : 0b143b4ac53ffbe1
+
+==================================================================
+ROUND 7 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : 099f60c580682729
+  X1 Share 1               : 6f97532bb5392962
+  X1 recombined            : 660833ee35510e4b
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    0 9 9 f              6 f 9 7 
+    6 0 c 5              5 3 2 b 
+    8 0 6 8              b 5 3 9 
+    2 7 2 9              2 9 6 2 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 660833ee35510e4b
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    0 e 9 f              6 f 9 7 
+    7 5 c 5              5 3 2 b 
+    a 7 6 8              b 5 3 9 
+    1 2 2 9              2 9 6 2 
+  Recombined after AC      : 610826ee12513b4b
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    8 9 6 1              2 c a 2 
+    b b a 1              d 1 b 0 
+    e 9 5 e              b f 5 b 
+    2 7 6 b              9 f f 3 
+  Recombined after SC      : a5c36a115605b898
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    8 9 6 1              2 c a 2 
+    b a 1 b              1 b 0 d 
+    5 e e 9              5 b b f 
+    b 2 7 6              3 9 f f 
+  Recombined after SR      : a5c3a11605568b89
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    2 3 b 2              5 a 6 5 
+    e 2 1 b              d 7 a 9 
+    7 d d 5              7 a e d 
+    9 6 f 6              e 1 7 4 
+  Recombined after MCS     : 79d735b207387782
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    2 3 b 2              5 a 6 5 
+    e 2 1 b              d 7 a 9 
+    7 d d 5              7 a e d 
+    9 6 f 6              e 1 7 4 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : 79d735b207387782
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    2 3 b 2              5 a 6 5 
+    e 2 1 b              d 7 a 9 
+    7 d d 5              7 a e d 
+    9 6 f 6              e 1 7 4 
+  Recombined after AC      : 79d735b207387782
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    e 1 c 5              3 f b 8 
+    4 1 7 f              f 1 f 9 
+    5 6 2 b              9 b 9 8 
+    8 4 1 9              5 9 2 f 
+  Recombined after SC      : de7db086cdb3dd36
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    e 1 c 5              3 f b 8 
+    1 7 f 4              1 f 9 f 
+    2 b 5 6              9 8 9 b 
+    9 8 4 1              f 5 9 2 
+  Recombined after SR      : de7d086bb3cd6dd3
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    9 5 8 d              1 f 3 8 
+    6 d 7 e              2 6 c 5 
+    c 1 e c              b 2 6 1 
+    c 8 a d              9 0 6 8 
+  Recombined after MCS     : 8ab54bbb738d58c5
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 958d6d7ec1ecc8ad
+  F Share 1                : 1f3826c5b2619068
+  F Share0 XOR Share1      : 8ab54bbb738d58c5
+
+==================================================================
+ROUND 7 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : 2b1da14ca7a09068
+  X3 Share 1               : 6f3e29aa10c60474
+  X3 recombined            : 442388e6b766941c
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    2 b 1 d              6 f 3 e 
+    a 1 4 c              2 9 a a 
+    a 7 a 0              1 0 c 6 
+    9 0 6 8              0 4 7 4 
+  Recombined input (X3 -> F2(X3) LED Round 1) : 442388e6b766941c
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    2 c 1 d              6 f 3 e 
+    8 4 4 c              2 9 a a 
+    8 0 a 0              1 0 c 6 
+    a 5 6 8              0 4 7 4 
+  Recombined after AC      : 4323ade69066a11c
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    a 9 c 0              3 2 a b 
+    f 0 c e              0 7 d 4 
+    8 1 3 c              6 d 9 6 
+    c 1 5 3              3 4 0 7 
+  Recombined after SC      : 9b6bf71aecaaf554
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    a 9 c 0              3 2 a b 
+    0 c e f              7 d 4 0 
+    3 c 8 1              9 6 6 d 
+    3 c 1 5              7 3 4 0 
+  Recombined after SR      : 9b6b71afaaec4f55
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    e e a 7              4 f e 3 
+    a d 0 c              0 c 2 b 
+    7 f 0 4              d e 4 2 
+    b f e 3              2 7 1 2 
+  Recombined after MCS     : a144a127a14698f1
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    e e a 7              4 f e 3 
+    a d 0 c              0 c 2 b 
+    7 f 0 4              d e 4 2 
+    b f e 3              2 7 1 2 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : a144a127a14698f1
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    e e a 7              4 f e 3 
+    a d 0 c              0 c 2 b 
+    7 f 0 4              d e 4 2 
+    b f e 3              2 7 1 2 
+  Recombined after AC      : a144a127a14698f1
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    4 3 f b              b 6 6 2 
+    a f f e              5 a 9 3 
+    9 e c d              6 b 5 7 
+    2 c a c              c f 8 9 
+  Recombined after SC      : f599f56df59ae325
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    4 3 f b              b 6 6 2 
+    f f e a              a 9 3 5 
+    c d 9 e              5 7 6 b 
+    c 2 c a              9 c f 8 
+  Recombined after SR      : f59956df9af55e32
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    c e d 8              b 7 9 b 
+    5 f 6 4              f 0 6 a 
+    8 1 b c              6 d 9 0 
+    0 9 1 5              8 b d a 
+  Recombined after MCS     : 7943af0eec2c82cf
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : ced85f6481bc0915
+  F Share 1                : b79bf06a6d908bda
+  F Share0 XOR Share1      : 7943af0eec2c82cf
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : 8ab54bbb738d58c5
+  F1 expected              : 8ab54bbb738d58c5
+  F1 verification          : PASS
+
+  F2 recombined            : 7943af0eec2c82cf
+  F2 expected              : 7943af0eec2c82cf
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 413b58488bb82105
+  X2'                      : 442388e6b766941c
+  X3'                      : 725794442913792e
+  X4'                      : 660833ee35510e4b
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 413b58488bb82105
+  X1 expected              : 413b58488bb82105
+  X1 verification          : PASS
+
+  X2 recombined            : 442388e6b766941c
+  X2 expected              : 442388e6b766941c
+  X2 verification          : PASS
+
+  X3 recombined            : 725794442913792e
+  X3 expected              : 725794442913792e
+  X3 verification          : PASS
+
+  X4 recombined            : 660833ee35510e4b
+  X4 expected              : 660833ee35510e4b
+  X4 verification          : PASS
+
+  ROUND 7 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 8
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 413b58488bb82105
+  X2                       : 442388e6b766941c
+  X3                       : 725794442913792e
+  X4                       : 660833ee35510e4b
+
+==================================================================
+ROUND 8 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : c39bc95d283412d0
+  X1 Share 1               : 82a09115a38c33d5
+  X1 recombined            : 413b58488bb82105
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    c 3 9 b              8 2 a 0 
+    c 9 5 d              9 1 1 5 
+    2 8 3 4              a 3 8 c 
+    1 2 d 0              3 3 d 5 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 413b58488bb82105
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    c 4 9 b              8 2 a 0 
+    d a 5 d              9 1 1 5 
+    0 f 3 4              a 3 8 c 
+    2 1 d 0              3 3 d 5 
+  Recombined after AC      : 463b4b48acb81205
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    9 a 2 e              0 0 9 6 
+    0 3 b 9              9 b 2 a 
+    7 6 5 5              8 2 d 6 
+    0 0 0 8              5 6 c 8 
+  Recombined after SC      : 9ab89893f48356c0
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    9 a 2 e              0 0 9 6 
+    3 b 9 0              b 2 a 9 
+    5 5 7 6              d 6 8 2 
+    8 0 0 0              8 5 6 c 
+  Recombined after SR      : 9ab8893983f4056c
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    8 f f 1              1 4 7 d 
+    9 2 8 4              6 c 4 2 
+    d e 1 1              7 d 6 9 
+    6 4 e b              5 1 8 d 
+  Recombined after MCS     : 9b8cfec6a3783566
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    8 f f 1              1 4 7 d 
+    9 2 8 4              6 c 4 2 
+    d e 1 1              7 d 6 9 
+    6 4 e b              5 1 8 d 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : 9b8cfec6a3783566
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    8 f f 1              1 4 7 d 
+    9 2 8 4              6 c 4 2 
+    d e 1 1              7 d 6 9 
+    6 4 e b              5 1 8 d 
+  Recombined after AC      : 9b8cfec6a3783566
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    f b 3 2              1 3 0 6 
+    8 9 b b              a 8 f 1 
+    f 6 a 3              0 d 7 0 
+    d 9 f 4              6 9 5 e 
+  Recombined after SC      : e834214afbd3b0aa
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    f b 3 2              1 3 0 6 
+    9 b b 8              8 f 1 a 
+    a 3 f 6              7 0 0 d 
+    4 d 9 f              e 6 9 5 
+  Recombined after SR      : e83414a2d3fbab0a
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    f e b 1              d f 0 2 
+    d f 1 f              7 8 5 d 
+    e 3 7 b              6 8 3 9 
+    a 4 5 0              2 4 e d 
+  Recombined after MCS     : 21b3a7428b4280bd
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : feb1df1fe37ba450
+  F Share 1                : df02785d683924ed
+  F Share0 XOR Share1      : 21b3a7428b4280bd
+
+==================================================================
+ROUND 8 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : 9225bba2c6640c7e
+  X3 Share 1               : e0722fe6ef777550
+  X3 recombined            : 725794442913792e
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    9 2 2 5              e 0 7 2 
+    b b a 2              2 f e 6 
+    c 6 6 4              e f 7 7 
+    0 c 7 e              7 5 5 0 
+  Recombined input (X3 -> F2(X3) LED Round 1) : 725794442913792e
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    9 5 2 5              e 0 7 2 
+    9 8 a 2              2 f e 6 
+    e 1 6 4              e f 7 7 
+    3 f 7 e              7 5 5 0 
+  Recombined after AC      : 7557b7440e134a2e
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    6 5 b 6              b 5 b b 
+    0 0 6 9              8 d f 0 
+    0 4 b a              c 5 e 1 
+    7 a 5 9              e 5 3 8 
+  Recombined after SC      : d00d8d99c15b9f61
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    6 5 b 6              b 5 b b 
+    0 6 9 0              d f 0 8 
+    b a 0 4              e 1 c 5 
+    9 7 a 5              8 e 5 3 
+  Recombined after SR      : d00dd9985bc119f6
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    f 8 4 9              b 5 b e 
+    7 c d f              9 d 3 a 
+    0 1 b a              1 9 3 c 
+    3 e 6 4              e 0 c e 
+  Recombined after MCS     : 4df7e1e51886deaa
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    f 8 4 9              b 5 b e 
+    7 c d f              9 d 3 a 
+    0 1 b a              1 9 3 c 
+    3 e 6 4              e 0 c e 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : 4df7e1e51886deaa
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    f 8 4 9              b 5 b e 
+    7 c d f              9 d 3 a 
+    0 1 b a              1 9 3 c 
+    3 e 6 4              e 0 c e 
+  Recombined after AC      : 4df7e1e51886deaa
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    1 e 6 e              8 9 4 3 
+    9 0 6 9              8 5 7 9 
+    6 9 3 9              3 a 0 3 
+    f d 0 2              8 c f d 
+  Recombined after SC      : 972d1510533a71ff
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    1 e 6 e              8 9 4 3 
+    0 6 9 9              5 7 9 8 
+    3 9 6 9              0 3 3 a 
+    2 f d 0              d 8 c f 
+  Recombined after SR      : 972d51013a53f71f
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    6 7 7 5              a 0 7 e 
+    b 1 3 1              9 f 4 e 
+    7 1 e a              b 9 6 1 
+    5 e f 0              f a 6 a 
+  Recombined after MCS     : c70b2e7fc88ba49a
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 6775b13171ea5ef0
+  F Share 1                : a07e9f4eb961fa6a
+  F Share0 XOR Share1      : c70b2e7fc88ba49a
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : 21b3a7428b4280bd
+  F1 expected              : 21b3a7428b4280bd
+  F1 verification          : PASS
+
+  F2 recombined            : c70b2e7fc88ba49a
+  F2 expected              : c70b2e7fc88ba49a
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 65902fa43c2414a1
+  X2'                      : 725794442913792e
+  X3'                      : a1031d91fddaaad1
+  X4'                      : 413b58488bb82105
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 65902fa43c2414a1
+  X1 expected              : 65902fa43c2414a1
+  X1 verification          : PASS
+
+  X2 recombined            : 725794442913792e
+  X2 expected              : 725794442913792e
+  X2 verification          : PASS
+
+  X3 recombined            : a1031d91fddaaad1
+  X3 expected              : a1031d91fddaaad1
+  X3 verification          : PASS
+
+  X4 recombined            : 413b58488bb82105
+  X4 expected              : 413b58488bb82105
+  X4 verification          : PASS
+
+  ROUND 8 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 9
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 65902fa43c2414a1
+  X2                       : 725794442913792e
+  X3                       : a1031d91fddaaad1
+  X4                       : 413b58488bb82105
+
+==================================================================
+ROUND 9 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : d5ac7e5344db3438
+  X1 Share 1               : b03c51f778ff2099
+  X1 recombined            : 65902fa43c2414a1
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    d 5 a c              b 0 3 c 
+    7 e 5 3              5 1 f 7 
+    4 4 d b              7 8 f f 
+    3 4 3 8              2 0 9 9 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 65902fa43c2414a1
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    d 3 a c              b 0 3 c 
+    6 9 5 3              5 1 f 7 
+    6 2 d b              7 8 f f 
+    0 3 3 8              2 0 9 9 
+  Recombined after AC      : 639038a41a2423a1
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    b e 6 d              1 5 8 1 
+    c 0 9 3              7 3 6 a 
+    0 c 4 e              5 3 2 7 
+    d d 6 0              b 6 9 5 
+  Recombined after SC      : abecb3f95f696bf5
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    b e 6 d              1 5 8 1 
+    0 9 3 c              3 6 a 7 
+    4 e 0 c              2 7 5 3 
+    0 d d 6              5 b 6 9 
+  Recombined after SR      : abec3f9b695f56bf
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    2 2 1 a              9 a a 4 
+    0 1 7 2              5 e 0 5 
+    7 6 1 0              6 c 6 7 
+    c d c 5              8 4 d 2 
+  Recombined after MCS     : b8be5f771a774917
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    2 2 1 a              9 a a 4 
+    0 1 7 2              5 e 0 5 
+    7 6 1 0              6 c 6 7 
+    c d c 5              8 4 d 2 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : b8be5f771a774917
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    2 2 1 a              9 a a 4 
+    0 1 7 2              5 e 0 5 
+    7 6 1 0              6 c 6 7 
+    c d c 5              8 4 d 2 
+  Recombined after AC      : b8be5f771a774917
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    3 9 2 6              b a a 7 
+    9 1 7 a              9 3 a 7 
+    7 d 8 d              2 2 5 0 
+    b 9 2 6              2 7 7 b 
+  Recombined after SC      : 838102dd5fdd9e5d
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    3 9 2 6              b a a 7 
+    1 7 a 9              3 a 7 9 
+    8 d 7 d              5 0 2 2 
+    6 b 9 2              b 2 7 7 
+  Recombined after SR      : 83812dd0dd5fd9e5
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    2 9 d f              6 0 3 c 
+    4 6 1 6              0 a 5 5 
+    c 7 d 2              0 5 3 e 
+    a 1 4 f              c 5 0 6 
+  Recombined after MCS     : 49e34c43c2ec6449
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 29df4616c7d2a14f
+  F Share 1                : 603c0a55053ec506
+  F Share0 XOR Share1      : 49e34c43c2ec6449
+
+==================================================================
+ROUND 9 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : 6eead1f4f18279d9
+  X3 Share 1               : cfe9cc650c58d308
+  X3 recombined            : a1031d91fddaaad1
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    6 e e a              c f e 9 
+    d 1 f 4              c c 6 5 
+    f 1 8 2              0 c 5 8 
+    7 9 d 9              d 3 0 8 
+  Recombined input (X3 -> F2(X3) LED Round 1) : a1031d91fddaaad1
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    6 8 e a              c f e 9 
+    f 6 f 4              c c 6 5 
+    d 7 8 2              0 c 5 8 
+    4 e d 9              d 3 0 8 
+  Recombined after AC      : a7033a91dbda9dd1
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    5 a e d              a 7 2 6 
+    f 1 9 e              4 e 7 b 
+    7 a 7 8              0 2 0 7 
+    3 b 1 a              d c 6 f 
+  Recombined after SC      : fdcbbfe5787fe775
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    5 a e d              a 7 2 6 
+    1 9 e f              e 7 b 4 
+    7 8 7 a              0 7 0 2 
+    a 3 b 1              f d c 6 
+  Recombined after SR      : fdcbfe5b7f785e77
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    f 2 8 b              d f 8 7 
+    9 8 c 4              9 c 2 3 
+    9 2 c 2              7 4 b 6 
+    1 9 2 3              b d c 6 
+  Recombined after MCS     : 2d0c04e7e674a4e5
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    f 2 8 b              d f 8 7 
+    9 8 c 4              9 c 2 3 
+    9 2 c 2              7 4 b 6 
+    1 9 2 3              b d c 6 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : 2d0c04e7e674a4e5
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    f 2 8 b              d f 8 7 
+    9 8 c 4              9 c 2 3 
+    9 2 c 2              7 4 b 6 
+    1 9 2 3              b d c 6 
+  Recombined after AC      : 2d0c04e7e674a4e5
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    a b 2 c              c c e 8 
+    9 9 3 b              5 0 2 6 
+    7 a d 0              6 0 0 9 
+    8 1 e 7              7 8 f 7 
+  Recombined after SC      : 67c4c91d1ad9f910
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    a b 2 c              c c e 8 
+    9 3 b 9              0 2 6 5 
+    d 0 7 a              0 9 6 0 
+    7 8 1 e              7 7 8 f 
+  Recombined after SR      : 67c491dcd91a0f91
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    0 a f 4              b 8 4 e 
+    1 8 2 f              b c 6 5 
+    4 c 7 5              7 d 7 a 
+    5 4 1 e              f 5 0 a 
+  Recombined after MCS     : b2baa44a310fa114
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 0af4182f4c75541e
+  F Share 1                : b84ebc657d7af50a
+  F Share0 XOR Share1      : b2baa44a310fa114
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : 49e34c43c2ec6449
+  F1 expected              : 49e34c43c2ec6449
+  F1 verification          : PASS
+
+  F2 recombined            : b2baa44a310fa114
+  F2 expected              : b2baa44a310fa114
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 3bb4d807ebff1d67
+  X2'                      : a1031d91fddaaad1
+  X3'                      : f381fc02bab78011
+  X4'                      : 65902fa43c2414a1
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 3bb4d807ebff1d67
+  X1 expected              : 3bb4d807ebff1d67
+  X1 verification          : PASS
+
+  X2 recombined            : a1031d91fddaaad1
+  X2 expected              : a1031d91fddaaad1
+  X2 verification          : PASS
+
+  X3 recombined            : f381fc02bab78011
+  X3 expected              : f381fc02bab78011
+  X3 verification          : PASS
+
+  X4 recombined            : 65902fa43c2414a1
+  X4 expected              : 65902fa43c2414a1
+  X4 verification          : PASS
+
+  ROUND 9 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 10
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 3bb4d807ebff1d67
+  X2                       : a1031d91fddaaad1
+  X3                       : f381fc02bab78011
+  X4                       : 65902fa43c2414a1
+
+==================================================================
+ROUND 10 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : bbfafdb401b6ad31
+  X1 Share 1               : 804e25b3ea49b056
+  X1 recombined            : 3bb4d807ebff1d67
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    b b f a              8 0 4 e 
+    f d b 4              2 5 b 3 
+    0 1 b 6              e a 4 9 
+    a d 3 1              b 0 5 6 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 3bb4d807ebff1d67
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    b e f a              8 0 4 e 
+    e a b 4              2 5 b 3 
+    2 4 b 6              e a 4 9 
+    9 a 3 1              b 0 5 6 
+  Recombined after AC      : 3eb4cf07ceff2a67
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    a 7 2 b              1 6 a 2 
+    1 0 5 d              5 2 9 0 
+    c 4 c 9              8 5 e b 
+    e e 3 a              8 1 9 7 
+  Recombined after SC      : b18942cd41226fad
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    a 7 2 b              1 6 a 2 
+    0 5 d 1              2 9 0 5 
+    c 9 c 4              e b 8 5 
+    a e e 3              7 8 1 9 
+  Recombined after SR      : b1892cd42241d6fa
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    2 4 1 5              7 4 f 6 
+    f 9 0 c              6 2 7 f 
+    6 5 9 1              8 e 4 f 
+    d 2 d 0              7 9 d 4 
+  Recombined after MCS     : 50e39b73ebdeab04
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    2 4 1 5              7 4 f 6 
+    f 9 0 c              6 2 7 f 
+    6 5 9 1              8 e 4 f 
+    d 2 d 0              7 9 d 4 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : 50e39b73ebdeab04
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    2 4 1 5              7 4 f 6 
+    f 9 0 c              6 2 7 f 
+    6 5 9 1              8 e 4 f 
+    d 2 d 0              7 9 d 4 
+  Recombined after AC      : 50e39b73ebdeab04
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    b 0 c 7              b c d c 
+    6 1 d 7              8 9 0 c 
+    3 0 9 6              2 8 e 7 
+    0 1 e 8              f 9 2 1 
+  Recombined after SC      : 0c1be8db1871f8c9
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    b 0 c 7              b c d c 
+    1 d 7 6              9 0 c 8 
+    9 6 3 0              e 7 2 8 
+    8 0 1 e              1 f 9 2 
+  Recombined after SR      : 0c1b8dbe71189f8c
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    9 1 6 6              e 6 8 a 
+    f 5 2 8              1 6 5 d 
+    6 3 5 1              1 0 8 a 
+    e d c a              a 3 3 c 
+  Recombined after MCS     : 77ece37573db4ef6
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 9166f5286351edca
+  F Share 1                : e68a165d108aa33c
+  F Share0 XOR Share1      : 77ece37573db4ef6
+
+==================================================================
+ROUND 10 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : c96fd172644146ce
+  X3 Share 1               : 3aee2d70def6c6df
+  X3 recombined            : f381fc02bab78011
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    c 9 6 f              3 a e e 
+    d 1 7 2              2 d 7 0 
+    6 4 4 1              d e f 6 
+    4 6 c e              c 6 d f 
+  Recombined input (X3 -> F2(X3) LED Round 1) : f381fc02bab78011
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    c c 6 f              3 a e e 
+    f 6 7 2              2 d 7 0 
+    4 1 4 1              d e f 6 
+    7 1 c e              c 6 d f 
+  Recombined after AC      : f681db029fb7b711
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    4 6 5 f              6 c 6 a 
+    c 8 8 3              b 0 4 5 
+    6 d 0 f              8 f 8 2 
+    a 2 8 5              2 f d 0 
+  Recombined after SC      : 2a3578c6e28d8d55
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    4 6 5 f              6 c 6 a 
+    8 8 3 c              0 4 5 b 
+    0 f 6 d              8 2 8 f 
+    5 a 2 8              0 2 f d 
+  Recombined after SR      : 2a358c678de258d5
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    1 9 c f              8 1 0 1 
+    e f 5 6              b 7 2 e 
+    8 f 8 8              0 6 d 9 
+    a 7 d 6              d b 4 e 
+  Recombined after MCS     : 98ce587889517c98
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    1 9 c f              8 1 0 1 
+    e f 5 6              b 7 2 e 
+    8 f 8 8              0 6 d 9 
+    a 7 d 6              d b 4 e 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : 98ce587889517c98
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    1 9 c f              8 1 0 1 
+    e f 5 6              b 7 2 e 
+    8 f 8 8              0 6 d 9 
+    a 7 d 6              d b 4 e 
+  Recombined after AC      : 98ce587889517c98
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    a 5 a 7              4 6 e 6 
+    c a 1 c              c 9 c f 
+    6 8 1 d              5 6 1 8 
+    f e 1 c              2 a f f 
+  Recombined after SC      : e34103d33e05d4e3
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    a 5 a 7              4 6 e 6 
+    a 1 c c              9 c f c 
+    1 d 6 8              1 8 5 6 
+    c f e 1              f 2 a f 
+  Recombined after SR      : e3413d30053e3d4e
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    d 2 1 2              5 0 f 6 
+    d 0 e b              4 9 6 2 
+    8 a 8 6              9 5 c c 
+    2 c 0 f              5 3 6 0 
+  Recombined after MCS     : 82e499891f4a7f6f
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : d212d0eb8a862c0f
+  F Share 1                : 50f6496295cc5360
+  F Share0 XOR Share1      : 82e499891f4a7f6f
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : 77ece37573db4ef6
+  F1 expected              : 77ece37573db4ef6
+  F1 verification          : PASS
+
+  F2 recombined            : 82e499891f4a7f6f
+  F2 expected              : 82e499891f4a7f6f
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : d6effee48e01e427
+  X2'                      : f381fc02bab78011
+  X3'                      : e774b62d236e6bce
+  X4'                      : 3bb4d807ebff1d67
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : d6effee48e01e427
+  X1 expected              : d6effee48e01e427
+  X1 verification          : PASS
+
+  X2 recombined            : f381fc02bab78011
+  X2 expected              : f381fc02bab78011
+  X2 verification          : PASS
+
+  X3 recombined            : e774b62d236e6bce
+  X3 expected              : e774b62d236e6bce
+  X3 verification          : PASS
+
+  X4 recombined            : 3bb4d807ebff1d67
+  X4 expected              : 3bb4d807ebff1d67
+  X4 verification          : PASS
+
+  ROUND 10 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 11
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : d6effee48e01e427
+  X2                       : f381fc02bab78011
+  X3                       : e774b62d236e6bce
+  X4                       : 3bb4d807ebff1d67
+
+==================================================================
+ROUND 11 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : ff8c24dc92d39413
+  X1 Share 1               : 2963da381cd27034
+  X1 recombined            : d6effee48e01e427
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    f f 8 c              2 9 6 3 
+    2 4 d c              d a 3 8 
+    9 2 d 3              1 c d 2 
+    9 4 1 3              7 0 3 4 
+  Recombined input (X1 -> F1(X1) LED Round 1) : d6effee48e01e427
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    f c 8 c              2 9 6 3 
+    3 2 d c              d a 3 8 
+    b 1 d 3              1 c d 2 
+    a 2 1 3              7 0 3 4 
+  Recombined after AC      : d5efe8e4ad01d227
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    c 4 4 6              b 4 5 4 
+    3 5 0 9              2 6 1 0 
+    2 2 d 2              d 5 1 7 
+    2 c 2 d              5 a 4 0 
+  Recombined after SC      : 70121319f7c5766d
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    c 4 4 6              b 4 5 4 
+    5 0 9 3              6 1 0 2 
+    d 2 2 2              1 7 d 5 
+    d 2 c 2              0 5 a 4 
+  Recombined after SR      : 70123191c5f7d766
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    0 3 5 8              e 6 9 3 
+    3 0 1 9              5 5 b 3 
+    a c c 8              1 c f 3 
+    0 0 9 2              6 0 f 0 
+  Recombined after MCS     : e5cb65aab03b6062
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    0 3 5 8              e 6 9 3 
+    3 0 1 9              5 5 b 3 
+    a c c 8              1 c f 3 
+    0 0 9 2              6 0 f 0 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : e5cb65aab03b6062
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    0 3 5 8              e 6 9 3 
+    3 0 1 9              5 5 b 3 
+    a c c 8              1 c f 3 
+    0 0 9 2              6 0 f 0 
+  Recombined after AC      : e5cb65aab03b6062
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    2 1 c 4              3 1 8 c 
+    2 7 0 c              8 7 f 3 
+    8 6 e 3              0 a 5 b 
+    0 7 b 0              a b 1 6 
+  Recombined after SC      : 1048a0ff8cb8aca6
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    2 1 c 4              3 1 8 c 
+    7 0 c 2              7 f 3 8 
+    e 3 8 6              5 b 0 a 
+    0 0 7 b              6 a b 1 
+  Recombined after SR      : 10480ffab88c6aca
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    0 2 4 8              d 9 0 8 
+    1 7 b 8              f 4 9 d 
+    f 6 c 0              5 9 a 5 
+    f 0 5 1              1 e c f 
+  Recombined after MCS     : db40e325af65ee9e
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 024817b8f6c0f051
+  F Share 1                : d908f49d59a51ecf
+  F Share0 XOR Share1      : db40e325af65ee9e
+
+==================================================================
+ROUND 11 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : 07beaeb8ce5d1837
+  X3 Share 1               : e0ca1895ed3373f9
+  X3 recombined            : e774b62d236e6bce
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    0 7 b e              e 0 c a 
+    a e b 8              1 8 9 5 
+    c e 5 d              e d 3 3 
+    1 8 3 7              7 3 f 9 
+  Recombined input (X3 -> F2(X3) LED Round 1) : e774b62d236e6bce
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    0 4 b e              e 0 c a 
+    8 8 b 8              1 8 9 5 
+    e d 5 d              e d 3 3 
+    2 e 3 7              7 3 f 9 
+  Recombined after AC      : e474902d006e5dce
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    7 3 6 c              6 a b 5 
+    4 8 3 4              a 4 5 3 
+    f a 8 f              3 6 2 e 
+    9 a f d              9 d b c 
+  Recombined after SC      : 19d9ec67cca10741
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    7 3 6 c              6 a b 5 
+    8 3 4 4              4 5 3 a 
+    8 f f a              2 e 3 6 
+    d 9 a f              c 9 d b 
+  Recombined after SR      : 19d9c67ea1cc1074
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    d 3 5 b              0 5 6 4 
+    e 4 1 1              a 2 a 5 
+    d e b 6              3 a a 2 
+    a 6 c c              4 4 7 0 
+  Recombined after MCS     : d63f46b4e414e2bc
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    d 3 5 b              0 5 6 4 
+    e 4 1 1              a 2 a 5 
+    d e b 6              3 a a 2 
+    a 6 c c              4 4 7 0 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : d63f46b4e414e2bc
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    d 3 5 b              0 5 6 4 
+    e 4 1 1              a 2 a 5 
+    d e b 6              3 a a 2 
+    a 6 c c              4 4 7 0 
+  Recombined after AC      : d63f46b4e414e2bc
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    2 e 5 5              5 4 e 7 
+    3 d 9 6              a 7 1 f 
+    b d 0 e              a 4 5 7 
+    a d c c              b b 4 8 
+  Recombined after SC      : 7ab29a8919591684
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    2 e 5 5              5 4 e 7 
+    d 9 6 3              7 1 f a 
+    0 e b d              5 7 a 4 
+    c a d c              8 b b 4 
+  Recombined after SR      : 7ab2a89959194168
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    e c d 6              9 9 0 5 
+    5 0 0 6              8 7 6 8 
+    9 c e d              d b 9 e 
+    0 9 3 6              5 8 7 a 
+  Recombined after MCS     : 75d3d76e4773514c
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : ecd650069ced0936
+  F Share 1                : 99058768db9e587a
+  F Share0 XOR Share1      : 75d3d76e4773514c
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : db40e325af65ee9e
+  F1 expected              : db40e325af65ee9e
+  F1 verification          : PASS
+
+  F2 recombined            : 75d3d76e4773514c
+  F2 expected              : 75d3d76e4773514c
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 28c11f2715d26e8f
+  X2'                      : e774b62d236e6bce
+  X3'                      : 4e670f69ac8c4c2b
+  X4'                      : d6effee48e01e427
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 28c11f2715d26e8f
+  X1 expected              : 28c11f2715d26e8f
+  X1 verification          : PASS
+
+  X2 recombined            : e774b62d236e6bce
+  X2 expected              : e774b62d236e6bce
+  X2 verification          : PASS
+
+  X3 recombined            : 4e670f69ac8c4c2b
+  X3 expected              : 4e670f69ac8c4c2b
+  X3 verification          : PASS
+
+  X4 recombined            : d6effee48e01e427
+  X4 expected              : d6effee48e01e427
+  X4 verification          : PASS
+
+  ROUND 11 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 12
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 28c11f2715d26e8f
+  X2                       : e774b62d236e6bce
+  X3                       : 4e670f69ac8c4c2b
+  X4                       : d6effee48e01e427
+
+==================================================================
+ROUND 12 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : cb27c6ca9281b69f
+  X1 Share 1               : e3e6d9ed8753d810
+  X1 recombined            : 28c11f2715d26e8f
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    c b 2 7              e 3 e 6 
+    c 6 c a              d 9 e d 
+    9 2 8 1              8 7 5 3 
+    b 6 9 f              d 8 1 0 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 28c11f2715d26e8f
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    c c 2 7              e 3 e 6 
+    d 2 c a              d 9 e d 
+    b 5 8 1              8 7 5 3 
+    8 2 9 f              d 8 1 0 
+  Recombined after AC      : 2fc10b2732d25a8f
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    7 0 a 3              1 2 e 6 
+    1 3 9 2              d b f f 
+    4 f 4 7              f 9 3 1 
+    5 a e 2              5 5 d 0 
+  Recombined after SC      : 6245c86db6760f32
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    7 0 a 3              1 2 e 6 
+    3 9 2 1              b f f d 
+    4 7 4 f              3 1 f 9 
+    2 5 a e              0 5 5 d 
+  Recombined after SR      : 624586dc76b620f3
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    0 d 3 f              9 f 5 e 
+    c 6 d 9              8 f 6 e 
+    a f 6 b              e 1 a f 
+    4 b 8 6              5 7 9 d 
+  Recombined after MCS     : 926149b74ec41c1b
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    0 d 3 f              9 f 5 e 
+    c 6 d 9              8 f 6 e 
+    a f 6 b              e 1 a f 
+    4 b 8 6              5 7 9 d 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : 926149b74ec41c1b
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    0 d 3 f              9 f 5 e 
+    c 6 d 9              8 f 6 e 
+    a f 6 b              e 1 a f 
+    4 b 8 6              5 7 9 d 
+  Recombined after AC      : 926149b74ec41c1b
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    1 6 1 d              f 0 b 8 
+    a 7 f 3              3 9 7 e 
+    e b b 1              7 a f 8 
+    e d f c              b 9 a 4 
+  Recombined after SC      : e6a59e8d91495458
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    1 6 1 d              f 0 b 8 
+    7 f 3 a              9 7 e 3 
+    b 1 e b              f 8 7 a 
+    c e d f              4 b 9 a 
+  Recombined after SR      : e6a5e8d949918545
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    d 9 1 3              5 1 b 5 
+    6 6 9 e              f 0 e b 
+    3 7 3 c              a f c b 
+    2 6 7 e              c 6 d b 
+  Recombined after MCS     : 88a6967598f7e0a5
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : d913669e373c267e
+  F Share 1                : 51b5f0ebafcbc6db
+  F Share0 XOR Share1      : 88a6967598f7e0a5
+
+==================================================================
+ROUND 12 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : 572cadb29d5ba407
+  X3 Share 1               : 194ba2db31d7e82c
+  X3 recombined            : 4e670f69ac8c4c2b
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    5 7 2 c              1 9 4 b 
+    a d b 2              a 2 d b 
+    9 d 5 b              3 1 d 7 
+    a 4 0 7              e 8 2 c 
+  Recombined input (X3 -> F2(X3) LED Round 1) : 4e670f69ac8c4c2b
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    5 0 2 c              1 9 4 b 
+    8 9 b 2              a 2 d b 
+    b a 5 b              3 1 d 7 
+    9 0 0 7              e 8 2 c 
+  Recombined after AC      : 49672b698b8c782b
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    6 e 1 6              f 0 b b 
+    d 7 9 c              b f 3 2 
+    f e 7 f              c 6 4 b 
+    2 3 c 1              f 0 a 9 
+  Recombined after SC      : 9ead68ae3834d368
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    6 e 1 6              f 0 b b 
+    7 9 c d              f 3 2 b 
+    7 f f e              4 b c 6 
+    1 2 3 c              9 f 0 a 
+  Recombined after SR      : 9ead8ae634388d36
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    0 d 3 2              f b 3 a 
+    a 0 a 0              1 f 2 c 
+    9 2 b 5              5 d 7 d 
+    2 1 d d              5 6 9 6 
+  Recombined after MCS     : f608bf8ccfc8774b
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    0 d 3 2              f b 3 a 
+    a 0 a 0              1 f 2 c 
+    9 2 b 5              5 d 7 d 
+    2 1 d d              5 6 9 6 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : f608bf8ccfc8774b
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    0 d 3 2              f b 3 a 
+    a 0 a 0              1 f 2 c 
+    9 2 b 5              5 d 7 d 
+    2 1 d d              5 6 9 6 
+  Recombined after AC      : f608bf8ccfc8774b
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    6 b 8 d              4 1 4 e 
+    6 b 8 d              e 9 b 9 
+    f 8 4 9              b a 0 a 
+    9 c c 4              4 1 5 c 
+  Recombined after SC      : 2ac382344243dd98
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    6 b 8 d              4 1 4 e 
+    b 8 d 6              9 b 9 e 
+    4 9 f 8              0 a b a 
+    4 9 c c              c 4 1 5 
+  Recombined after SR      : 2ac3234843428dd9
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    0 2 d f              1 0 d e 
+    6 a c 5              b 8 2 2 
+    b 8 7 d              b 9 6 0 
+    a 4 d 9              4 1 1 d 
+  Recombined after MCS     : 1201d2e7011de5c4
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 02df6ac5b87da4d9
+  F Share 1                : 10deb822b960411d
+  F Share0 XOR Share1      : 1201d2e7011de5c4
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : 88a6967598f7e0a5
+  F1 expected              : 88a6967598f7e0a5
+  F1 verification          : PASS
+
+  F2 recombined            : 1201d2e7011de5c4
+  F2 expected              : 1201d2e7011de5c4
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 6fd22058bb998b6b
+  X2'                      : 4e670f69ac8c4c2b
+  X3'                      : c4ee2c038f1c01e3
+  X4'                      : 28c11f2715d26e8f
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 6fd22058bb998b6b
+  X1 expected              : 6fd22058bb998b6b
+  X1 verification          : PASS
+
+  X2 recombined            : 4e670f69ac8c4c2b
+  X2 expected              : 4e670f69ac8c4c2b
+  X2 verification          : PASS
+
+  X3 recombined            : c4ee2c038f1c01e3
+  X3 expected              : c4ee2c038f1c01e3
+  X3 verification          : PASS
+
+  X4 recombined            : 28c11f2715d26e8f
+  X4 expected              : 28c11f2715d26e8f
+  X4 verification          : PASS
+
+  ROUND 12 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 13
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 6fd22058bb998b6b
+  X2                       : 4e670f69ac8c4c2b
+  X3                       : c4ee2c038f1c01e3
+  X4                       : 28c11f2715d26e8f
+
+==================================================================
+ROUND 13 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : deadc826f9613e49
+  X1 Share 1               : b17fe87e42f8b522
+  X1 recombined            : 6fd22058bb998b6b
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    d e a d              b 1 7 f 
+    c 8 2 6              e 8 7 e 
+    f 9 6 1              4 2 f 8 
+    3 e 4 9              b 5 2 2 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 6fd22058bb998b6b
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    d 9 a d              b 1 7 f 
+    d 9 2 6              e 8 7 e 
+    d e 6 1              4 2 f 8 
+    0 f 4 9              b 5 2 2 
+  Recombined after AC      : 68d231589c99ba6b
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    9 5 1 5              3 6 6 3 
+    4 8 4 a              f d 4 9 
+    a d c 8              4 9 2 6 
+    8 5 5 2              0 a f a 
+  Recombined after SC      : a376b503e4ee8fa8
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    9 5 1 5              3 6 6 3 
+    8 4 a 4              d 4 9 f 
+    c 8 a d              2 6 4 9 
+    2 8 5 5              a 0 a f 
+  Recombined after SR      : a376503beee488fa
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    5 3 3 0              2 3 d f 
+    4 e 8 4              0 3 8 0 
+    5 7 e c              6 b 3 0 
+    f 4 8 4              0 0 6 6 
+  Recombined after MCS     : 70ef4d043cdcf4e2
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    5 3 3 0              2 3 d f 
+    4 e 8 4              0 3 8 0 
+    5 7 e c              6 b 3 0 
+    f 4 8 4              0 0 6 6 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : 70ef4d043cdcf4e2
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    5 3 3 0              2 3 d f 
+    4 e 8 4              0 3 8 0 
+    5 7 e c              6 b 3 0 
+    f 4 8 4              0 0 6 6 
+  Recombined after AC      : 70ef4d043cdcf4e2
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    7 7 2 9              a b 3 b 
+    1 8 0 e              8 f c 7 
+    e 0 5 f              5 4 2 b 
+    3 5 9 b              1 c 8 d 
+  Recombined after SC      : dc1297c9b4742916
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    7 7 2 9              a b 3 b 
+    8 0 e 1              f c 7 8 
+    5 f e 0              2 b 5 4 
+    b 3 5 9              d 1 c 8 
+  Recombined after SR      : dc127c9974b46291
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    8 4 3 2              c 1 a 9 
+    5 1 f 1              9 e 6 0 
+    5 0 3 f              f 6 0 a 
+    2 a f f              1 6 3 8 
+  Recombined after MCS     : 459bcf91a6353cc7
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 843251f1503f2aff
+  F Share 1                : c1a99e60f60a1638
+  F Share0 XOR Share1      : 459bcf91a6353cc7
+
+==================================================================
+ROUND 13 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : fd534e192aae30ca
+  X3 Share 1               : 39bd621aa5b23129
+  X3 recombined            : c4ee2c038f1c01e3
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    f d 5 3              3 9 b d 
+    4 e 1 9              6 2 1 a 
+    2 a a e              a 5 b 2 
+    3 0 c a              3 1 2 9 
+  Recombined input (X3 -> F2(X3) LED Round 1) : c4ee2c038f1c01e3
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    f a 5 3              3 9 b d 
+    6 f 1 9              6 2 1 a 
+    0 d a e              a 5 b 2 
+    0 1 c a              3 1 2 9 
+  Recombined after AC      : c3ee0d03a81c30e3
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    6 7 8 1              2 c 9 0 
+    2 4 4 f              e 3 8 4 
+    1 c e d              e f b 9 
+    b 3 a a              0 f b 1 
+  Recombined after SC      : 4b11c7cbf354bc1b
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    6 7 8 1              2 c 9 0 
+    4 4 f 2              3 8 4 e 
+    e d 1 c              b 9 e f 
+    a b 3 a              1 0 f b 
+  Recombined after SR      : 4b117cbc54f3bbc1
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    7 7 d a              c c 4 6 
+    4 5 7 4              e 4 8 b 
+    1 e 0 0              f 1 9 b 
+    3 8 f c              a 6 f c 
+  Recombined after MCS     : bb9ca1ffef9b9e00
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    7 7 d a              c c 4 6 
+    4 5 7 4              e 4 8 b 
+    1 e 0 0              f 1 9 b 
+    3 8 f c              a 6 f c 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : bb9ca1ffef9b9e00
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    7 7 d a              c c 4 6 
+    4 5 7 4              e 4 8 b 
+    1 e 0 0              f 1 9 b 
+    3 8 f c              a 6 f c 
+  Recombined after AC      : bb9ca1ffef9b9e00
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    8 c 3 6              0 4 d 2 
+    b d f a              4 8 d 8 
+    3 5 a a              2 7 4 2 
+    d 9 b 6              3 8 7 a 
+  Recombined after SC      : 88e4f52212e8e1cc
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    8 c 3 6              0 4 d 2 
+    d f a b              8 d 8 4 
+    a a 3 5              4 2 2 7 
+    6 d 9 b              a 3 8 7 
+  Recombined after SR      : 88e4522fe812ce1c
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    0 4 1 f              7 c e c 
+    7 2 e 7              b e 8 1 
+    6 f 8 f              2 f c 1 
+    9 c f 6              8 2 0 3 
+  Recombined after MCS     : 78f3cc66404e1ef5
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 041f72e76f8f9cf6
+  F Share 1                : 7cecbe812fc18203
+  F Share0 XOR Share1      : 78f3cc66404e1ef5
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : 459bcf91a6353cc7
+  F1 expected              : 459bcf91a6353cc7
+  F1 verification          : PASS
+
+  F2 recombined            : 78f3cc66404e1ef5
+  F2 expected              : 78f3cc66404e1ef5
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 0bfcc0f80ab970ec
+  X2'                      : c4ee2c038f1c01e3
+  X3'                      : 5032d341559c707a
+  X4'                      : 6fd22058bb998b6b
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 0bfcc0f80ab970ec
+  X1 expected              : 0bfcc0f80ab970ec
+  X1 verification          : PASS
+
+  X2 recombined            : c4ee2c038f1c01e3
+  X2 expected              : c4ee2c038f1c01e3
+  X2 verification          : PASS
+
+  X3 recombined            : 5032d341559c707a
+  X3 expected              : 5032d341559c707a
+  X3 verification          : PASS
+
+  X4 recombined            : 6fd22058bb998b6b
+  X4 expected              : 6fd22058bb998b6b
+  X4 verification          : PASS
+
+  ROUND 13 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 14
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 0bfcc0f80ab970ec
+  X2                       : c4ee2c038f1c01e3
+  X3                       : 5032d341559c707a
+  X4                       : 6fd22058bb998b6b
+
+==================================================================
+ROUND 14 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : d31efc43cd648ef8
+  X1 Share 1               : d8e23cbbc7ddfe14
+  X1 recombined            : 0bfcc0f80ab970ec
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    d 3 1 e              d 8 e 2 
+    f c 4 3              3 c b b 
+    c d 6 4              c 7 d d 
+    8 e f 8              f e 1 4 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 0bfcc0f80ab970ec
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    d 5 1 e              d 8 e 2 
+    e f 4 3              3 c b b 
+    e b 6 4              c 7 d d 
+    b d f 8              f e 1 4 
+  Recombined after AC      : 0dfcd3f82cb943ec
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    0 a b 6              c d 9 2 
+    b a 4 5              c 1 6 6 
+    9 d 1 f              f 9 9 1 
+    2 8 6 c              b 3 7 8 
+  Recombined after SC      : c7247b23648e9b14
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    0 a b 6              c d 9 2 
+    a 4 5 b              1 6 6 c 
+    1 f 9 d              9 1 f 9 
+    c 2 8 6              8 b 3 7 
+  Recombined after SR      : c724b2378e6449b1
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    3 3 d 5              6 0 f b 
+    2 e 4 1              2 f f 7 
+    a 2 b f              2 2 a e 
+    5 0 6 1              0 3 9 5 
+  Recombined after MCS     : 532e01b6801153f4
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    3 3 d 5              6 0 f b 
+    2 e 4 1              2 f f 7 
+    a 2 b f              2 2 a e 
+    5 0 6 1              0 3 9 5 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : 532e01b6801153f4
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    3 3 d 5              6 0 f b 
+    2 e 4 1              2 f f 7 
+    a 2 b f              2 2 a e 
+    5 0 6 1              0 3 9 5 
+  Recombined after AC      : 532e01b6801153f4
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    7 5 3 1              7 e 5 0 
+    c 3 2 0              0 6 a a 
+    8 b 1 f              b 7 4 a 
+    2 8 6 c              2 3 4 5 
+  Recombined after SC      : 0b61c58a3c550b29
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    7 5 3 1              7 e 5 0 
+    3 2 0 c              6 a a 0 
+    1 f 8 b              4 a b 7 
+    c 2 8 6              5 2 3 4 
+  Recombined after SR      : 0b6158ac553c90b2
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    5 c c 1              b 4 e 6 
+    c 8 0 0              0 8 c 3 
+    9 3 5 e              3 7 d 1 
+    a 1 0 5              a 1 0 1 
+  Recombined after MCS     : e827c0c3a48f0004
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 5cc1c800935ea105
+  F Share 1                : b4e608c337d1a101
+  F Share0 XOR Share1      : e827c0c3a48f0004
+
+==================================================================
+ROUND 14 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : cf38b42dfd0e2a69
+  X3 Share 1               : 9f0a676ca8925a13
+  X3 recombined            : 5032d341559c707a
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    c f 3 8              9 f 0 a 
+    b 4 2 d              6 7 6 c 
+    f d 0 e              a 8 9 2 
+    2 a 6 9              5 a 1 3 
+  Recombined input (X3 -> F2(X3) LED Round 1) : 5032d341559c707a
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    c 9 3 8              9 f 0 a 
+    9 7 2 d              6 7 6 c 
+    d b 0 e              a 8 9 2 
+    1 9 6 9              5 a 1 3 
+  Recombined after AC      : 5632f041739c437a
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    6 0 0 4              6 a b 2 
+    b d c 7              9 1 5 2 
+    4 3 1 c              9 8 f 8 
+    0 1 b 5              9 a 6 a 
+  Recombined after SC      : 0ab62c95dbe49bdf
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    6 0 0 4              6 a b 2 
+    d c 7 b              1 5 2 9 
+    1 c 4 3              f 8 9 8 
+    5 0 1 b              a 9 a 6 
+  Recombined after SR      : 0ab6c952e4dbf9bd
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    e 7 d b              0 9 e e 
+    5 7 0 9              c f 9 9 
+    4 5 b 3              8 3 6 e 
+    b 3 c 6              6 0 d b 
+  Recombined after MCS     : ee359890c6ddd31d
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    e 7 d b              0 9 e e 
+    5 7 0 9              c f 9 9 
+    4 5 b 3              8 3 6 e 
+    b 3 c 6              6 0 d b 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : ee359890c6ddd31d
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    e 7 d b              0 9 e e 
+    5 7 0 9              c f 9 9 
+    4 5 b 3              8 3 6 e 
+    b 3 c 6              6 0 d b 
+  Recombined after AC      : ee359890c6ddd31d
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    f e e 4              e f 5 4 
+    f 9 c d              1 a 2 1 
+    2 3 9 5              6 9 e 2 
+    d c 7 b              a 7 2 c 
+  Recombined after SC      : 11b0e3ec4a777b57
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    f e e 4              e f 5 4 
+    9 c d f              a 2 1 1 
+    9 5 2 3              e 2 6 9 
+    b d c 7              c a 7 2 
+  Recombined after SR      : 11b03ece774a77b5
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    4 2 f 4              3 8 4 7 
+    6 d 5 c              d e 4 7 
+    d 7 3 8              e e c 0 
+    b 4 6 3              0 6 8 1 
+  Recombined after MCS     : 7ab3b31b39f8b2e2
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 42f46d5cd738b463
+  F Share 1                : 3847de47eec00681
+  F Share0 XOR Share1      : 7ab3b31b39f8b2e2
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : e827c0c3a48f0004
+  F1 expected              : e827c0c3a48f0004
+  F1 verification          : PASS
+
+  F2 recombined            : 7ab3b31b39f8b2e2
+  F2 expected              : 7ab3b31b39f8b2e2
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 2cc9ecc02b9301e7
+  X2'                      : 5032d341559c707a
+  X3'                      : 1561934382613989
+  X4'                      : 0bfcc0f80ab970ec
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 2cc9ecc02b9301e7
+  X1 expected              : 2cc9ecc02b9301e7
+  X1 verification          : PASS
+
+  X2 recombined            : 5032d341559c707a
+  X2 expected              : 5032d341559c707a
+  X2 verification          : PASS
+
+  X3 recombined            : 1561934382613989
+  X3 expected              : 1561934382613989
+  X3 verification          : PASS
+
+  X4 recombined            : 0bfcc0f80ab970ec
+  X4 expected              : 0bfcc0f80ab970ec
+  X4 verification          : PASS
+
+  ROUND 14 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 15
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 2cc9ecc02b9301e7
+  X2                       : 5032d341559c707a
+  X3                       : 1561934382613989
+  X4                       : 0bfcc0f80ab970ec
+
+==================================================================
+ROUND 15 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : a1928619b9f091cf
+  X1 Share 1               : 8d5b6ad992639028
+  X1 recombined            : 2cc9ecc02b9301e7
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    a 1 9 2              8 d 5 b 
+    8 6 1 9              6 a d 9 
+    b 9 f 0              9 2 6 3 
+    9 1 c f              9 0 2 8 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 2cc9ecc02b9301e7
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    a 5 9 2              8 d 5 b 
+    9 1 1 9              6 a d 9 
+    9 d f 0              9 2 6 3 
+    a 6 c f              9 0 2 8 
+  Recombined after AC      : 28c9fbc00f9336e7
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    6 6 f d              0 5 b 3 
+    8 b 1 f              a 3 5 3 
+    5 1 0 6              9 3 e d 
+    1 f 4 5              a 5 5 8 
+  Recombined after SC      : 634e284cc2ebba1d
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    6 6 f d              0 5 b 3 
+    b 1 f 8              3 5 3 a 
+    0 6 5 1              e d 9 3 
+    5 1 f 4              8 a 5 5 
+  Recombined after SR      : 634e84c2ebc2dba1
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    a 4 1 3              f c 2 a 
+    7 8 3 9              c 6 b 0 
+    c 1 c 7              3 c 6 e 
+    8 1 5 f              4 5 c 2 
+  Recombined after MCS     : 5839be89fda9c49d
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    a 4 1 3              f c 2 a 
+    7 8 3 9              c 6 b 0 
+    c 1 c 7              3 c 6 e 
+    8 1 5 f              4 5 c 2 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : 5839be89fda9c49d
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    a 4 1 3              f c 2 a 
+    7 8 3 9              c 6 b 0 
+    c 1 c 7              3 c 6 e 
+    8 1 5 f              4 5 c 2 
+  Recombined after AC      : 5839be89fda9c49d
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    b 8 1 5              b b a b 
+    9 e 6 5              1 f 5 b 
+    0 f c 0              2 8 3 e 
+    7 3 4 3              3 a a 4 
+  Recombined after SC      : 03be813e27fe49e7
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    b 8 1 5              b b a b 
+    e 6 5 9              f 5 b 1 
+    c 0 0 f              3 e 2 8 
+    3 7 3 4              4 3 a a 
+  Recombined after SR      : 03be13e8fe27749e
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    9 e 7 b              b 6 6 f 
+    6 a f 0              7 3 3 6 
+    b f 0 8              3 4 8 d 
+    c b 6 b              0 4 d 4 
+  Recombined after MCS     : 281419c68b85cfbf
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 9e7b6af0bf08cb6b
+  F Share 1                : b66f7336348d04d4
+  F Share0 XOR Share1      : 281419c68b85cfbf
+
+==================================================================
+ROUND 15 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : 9c59a57a2e598a2a
+  X3 Share 1               : 89383639ac38b3a3
+  X3 recombined            : 1561934382613989
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    9 c 5 9              8 9 3 8 
+    a 5 7 a              3 6 3 9 
+    2 e 5 9              a c 3 8 
+    8 a 2 a              b 3 a 3 
+  Recombined input (X3 -> F2(X3) LED Round 1) : 1561934382613989
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    9 8 5 9              8 9 3 8 
+    8 2 7 a              3 6 3 9 
+    0 a 5 9              a c 3 8 
+    b d 2 a              b 3 a 3 
+  Recombined after AC      : 1161b443a6610e89
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    c 9 6 c              9 c c 9 
+    c d 4 4              4 4 d f 
+    c 8 d c              3 2 7 9 
+    e 7 e 7              2 6 d 9 
+  Recombined after SC      : 55a5899bfaa5c13e
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    c 9 6 c              9 c c 9 
+    d 4 4 c              4 d f 4 
+    d c c 8              7 9 3 2 
+    7 e 7 e              9 2 6 d 
+  Recombined after SR      : 55a599b8a5faec13
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    f 2 a 5              9 d 0 b 
+    f 4 6 8              4 5 6 d 
+    6 7 9 1              f 3 6 9 
+    1 9 8 9              e 9 b 2 
+  Recombined after MCS     : 6faeb10594f8f03b
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    f 2 a 5              9 d 0 b 
+    f 4 6 8              4 5 6 d 
+    6 7 9 1              f 3 6 9 
+    1 9 8 9              e 9 b 2 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : 6faeb10594f8f03b
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    f 2 a 5              9 d 0 b 
+    f 4 6 8              4 5 6 d 
+    6 7 9 1              f 3 6 9 
+    1 9 8 9              e 9 b 2 
+  Recombined after AC      : 6faeb10594f8f03b
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    b 3 5 f              1 1 a e 
+    a 6 c 2              2 3 0 2 
+    b 2 7 3              5 b 5 0 
+    0 e e 8              2 2 5 0 
+  Recombined after SC      : a2f185c0e9232cb8
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    b 3 5 f              1 1 a e 
+    6 c 2 a              3 0 2 2 
+    7 3 b 2              5 0 5 b 
+    8 0 e e              0 2 2 5 
+  Recombined after SR      : a2f15c0823e982cb
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    1 6 f 8              d 0 2 0 
+    d a 1 0              0 4 d 9 
+    c 7 b 5              e a 8 e 
+    5 f 5 f              2 7 0 9 
+  Recombined after MCS     : c6d8dec92d3b7856
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 16f8da10c7b55f5f
+  F Share 1                : d02004d9ea8e2709
+  F Share0 XOR Share1      : c6d8dec92d3b7856
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : 281419c68b85cfbf
+  F1 expected              : 281419c68b85cfbf
+  F1 verification          : PASS
+
+  F2 recombined            : c6d8dec92d3b7856
+  F2 expected              : c6d8dec92d3b7856
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 7826ca87de19bfc5
+  X2'                      : 1561934382613989
+  X3'                      : cd241e31278208ba
+  X4'                      : 2cc9ecc02b9301e7
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 7826ca87de19bfc5
+  X1 expected              : 7826ca87de19bfc5
+  X1 verification          : PASS
+
+  X2 recombined            : 1561934382613989
+  X2 expected              : 1561934382613989
+  X2 verification          : PASS
+
+  X3 recombined            : cd241e31278208ba
+  X3 expected              : cd241e31278208ba
+  X3 verification          : PASS
+
+  X4 recombined            : 2cc9ecc02b9301e7
+  X4 expected              : 2cc9ecc02b9301e7
+  X4 verification          : PASS
+
+  ROUND 15 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 16
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 7826ca87de19bfc5
+  X2                       : 1561934382613989
+  X3                       : cd241e31278208ba
+  X4                       : 2cc9ecc02b9301e7
+
+==================================================================
+ROUND 16 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : 5143dedd4206e102
+  X1 Share 1               : 2965145a9c1f5ec7
+  X1 recombined            : 7826ca87de19bfc5
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    5 1 4 3              2 9 6 5 
+    d e d d              1 4 5 a 
+    4 2 0 6              9 c 1 f 
+    e 1 0 2              5 e c 7 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 7826ca87de19bfc5
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    5 0 4 3              2 9 6 5 
+    c 8 d d              1 4 5 a 
+    6 3 0 6              9 c 1 f 
+    d 7 0 2              5 e c 7 
+  Recombined after AC      : 7926dc87ff1989c5
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    b 5 7 7              6 b 1 d 
+    f 7 e c              8 3 d 1 
+    3 2 6 2              1 0 3 c 
+    f c a 3              c 2 e 3 
+  Recombined after SC      : de6a743d225e3e40
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    b 5 7 7              6 b 1 d 
+    7 e c f              3 d 1 8 
+    6 2 3 2              3 c 1 0 
+    3 f c a              3 c 2 e 
+  Recombined after SR      : de6a43d75e2203e4
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    7 0 e 3              8 7 3 6 
+    1 2 2 a              a 8 7 5 
+    4 3 b 3              b 4 e 8 
+    1 b a c              6 9 a 2 
+  Recombined after MCS     : f7d5ba5ff75b720e
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    7 0 e 3              8 7 3 6 
+    1 2 2 a              a 8 7 5 
+    4 3 b 3              b 4 e 8 
+    1 b a c              6 9 a 2 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : f7d5ba5ff75b720e
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    7 0 e 3              8 7 3 6 
+    1 2 2 a              a 8 7 5 
+    4 3 b 3              b 4 e 8 
+    1 b a c              6 9 a 2 
+  Recombined after AC      : f7d5ba5ff75b720e
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    3 9 4 4              1 4 3 4 
+    d 7 c 0              5 8 c 2 
+    d 9 d b              f 4 d 3 
+    7 5 9 a              a 3 5 b 
+  Recombined after SC      : 2d708f022d08d6c1
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    3 9 4 4              1 4 3 4 
+    7 c 0 d              8 c 2 5 
+    d b d 9              d 3 f 4 
+    a 7 5 9              b a 3 5 
+  Recombined after SR      : 2d70f028082d1d6c
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    5 5 0 e              0 e 5 4 
+    f a 7 6              e e b 1 
+    c 0 a 8              5 6 5 c 
+    d d e 3              f 3 6 a 
+  Recombined after MCS     : 5b5a14c796f42e89
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 550efa76c0a8dde3
+  F Share 1                : 0e54eeb1565cf36a
+  F Share0 XOR Share1      : 5b5a14c796f42e89
+
+==================================================================
+ROUND 16 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : c5e626530ad1d1a7
+  X3 Share 1               : 08c238622d53d91d
+  X3 recombined            : cd241e31278208ba
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    c 5 e 6              0 8 c 2 
+    2 6 5 3              3 8 6 2 
+    0 a d 1              2 d 5 3 
+    d 1 a 7              d 9 1 d 
+  Recombined input (X3 -> F2(X3) LED Round 1) : cd241e31278208ba
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    c 4 e 6              0 8 c 2 
+    0 0 5 3              3 8 6 2 
+    2 b d 1              2 d 5 3 
+    e 7 a 7              d 9 1 d 
+  Recombined after AC      : cc24383106823eba
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    e 8 d 7              a c b e 
+    b c d 3              0 f 6 6 
+    d d 8 8              1 7 b e 
+    9 7 0 c              2 6 8 3 
+  Recombined after SC      : 4469b3b5ca36b18f
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    e 8 d 7              a c b e 
+    c d 3 b              f 6 6 0 
+    8 8 d d              b e 1 7 
+    c 9 7 0              3 2 6 8 
+  Recombined after SR      : 44693b5b36cafb18
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    9 9 5 d              2 8 2 0 
+    7 9 5 e              0 2 2 4 
+    5 f 6 7              d 8 2 f 
+    8 7 c c              7 7 9 3 
+  Recombined after MCS     : b17d7b7a8748f05f
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    9 9 5 d              2 8 2 0 
+    7 9 5 e              0 2 2 4 
+    5 f 6 7              d 8 2 f 
+    8 7 c c              7 7 9 3 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : b17d7b7a8748f05f
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    9 9 5 d              2 8 2 0 
+    7 9 5 e              0 2 2 4 
+    5 f 6 7              d 8 2 f 
+    8 7 c c              7 7 9 3 
+  Recombined after AC      : b17d7b7a8748f05f
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    6 d 5 c              e 8 8 b 
+    0 8 c 2              d 0 1 d 
+    0 e e 2              3 3 7 1 
+    7 9 c 4              5 5 c 6 
+  Recombined after SC      : 85d7d8df3d932c02
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    6 d 5 c              e 8 8 b 
+    8 c 2 0              0 1 d d 
+    e 2 0 e              7 1 3 3 
+    4 7 9 c              6 5 5 c 
+  Recombined after SR      : 85d78dfd933d22c0
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    4 7 4 1              f f 7 a 
+    8 7 1 7              6 2 6 e 
+    2 f 3 d              8 8 b 8 
+    0 b 2 3              b f 9 3 
+  Recombined after MCS     : b83be579a785b4b0
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 474187172f3d0b23
+  F Share 1                : ff7a626e88b8bf93
+  F Share0 XOR Share1      : b83be579a785b4b0
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : 5b5a14c796f42e89
+  F1 expected              : 5b5a14c796f42e89
+  F1 verification          : PASS
+
+  F2 recombined            : b83be579a785b4b0
+  F2 expected              : b83be579a785b4b0
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 4e3b878414951700
+  X2'                      : cd241e31278208ba
+  X3'                      : 94f209b98c16b557
+  X4'                      : 7826ca87de19bfc5
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 4e3b878414951700
+  X1 expected              : 4e3b878414951700
+  X1 verification          : PASS
+
+  X2 recombined            : cd241e31278208ba
+  X2 expected              : cd241e31278208ba
+  X2 verification          : PASS
+
+  X3 recombined            : 94f209b98c16b557
+  X3 expected              : 94f209b98c16b557
+  X3 verification          : PASS
+
+  X4 recombined            : 7826ca87de19bfc5
+  X4 expected              : 7826ca87de19bfc5
+  X4 verification          : PASS
+
+  ROUND 16 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 17
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 4e3b878414951700
+  X2                       : cd241e31278208ba
+  X3                       : 94f209b98c16b557
+  X4                       : 7826ca87de19bfc5
+
+==================================================================
+ROUND 17 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : c9575f0ceef157c9
+  X1 Share 1               : 876cd888fa6440c9
+  X1 recombined            : 4e3b878414951700
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    c 9 5 7              8 7 6 c 
+    5 f 0 c              d 8 8 8 
+    e e f 1              f a 6 4 
+    5 7 c 9              4 0 c 9 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 4e3b878414951700
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    c a 5 7              8 7 6 c 
+    4 a 0 c              d 8 8 8 
+    c d f 1              f a 6 4 
+    6 2 c 9              4 0 c 9 
+  Recombined after AC      : 4d3b928437952200
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    c 9 1 e              5 e a 6 
+    b 3 d a              5 5 e 3 
+    9 d 4 c              2 0 a c 
+    3 2 4 0              5 4 8 c 
+  Recombined after SC      : 97b8e639bde066cc
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    c 9 1 e              5 e a 6 
+    3 d a b              5 e 3 5 
+    4 c 9 d              a c 2 0 
+    0 3 2 4              c 5 4 8 
+  Recombined after SR      : 97b8639ee0bdc66c
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    e 2 b 7              e 2 1 d 
+    7 f 6 1              9 f 4 d 
+    2 f 9 9              c 9 6 8 
+    4 e e 7              1 9 6 1 
+  Recombined after MCS     : 00aae02ce6f15786
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    e 2 b 7              e 2 1 d 
+    7 f 6 1              9 f 4 d 
+    2 f 9 9              c 9 6 8 
+    4 e e 7              1 9 6 1 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : 00aae02ce6f15786
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    e 2 b 7              e 2 1 d 
+    7 f 6 1              9 f 4 d 
+    2 f 9 9              c 9 6 8 
+    4 e e 7              1 9 6 1 
+  Recombined after AC      : 00aae02ce6f15786
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    7 a 4 3              b 6 b c 
+    8 9 b 6              9 5 d 2 
+    7 0 7 7              6 a 5 2 
+    8 f 6 7              8 2 5 d 
+  Recombined after SC      : ccff1c641a250d3a
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    7 a 4 3              b 6 b c 
+    9 b 6 8              5 d 2 9 
+    7 7 7 0              5 2 6 a 
+    7 8 f 6              d 8 2 5 
+  Recombined after SR      : ccffc641251aa0d3
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    6 8 6 8              c 1 0 1 
+    7 d d 9              0 2 a 0 
+    a d 5 4              1 6 e 9 
+    0 e c a              f f 0 7 
+  Recombined after MCS     : a9697f79bbbdf1cd
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 68687dd9ad540eca
+  F Share 1                : c10102a016e9ff07
+  F Share0 XOR Share1      : a9697f79bbbdf1cd
+
+==================================================================
+ROUND 17 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : e6d3010e96cd9aec
+  X3 Share 1               : 722108b71adb2fbb
+  X3 recombined            : 94f209b98c16b557
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    e 6 d 3              7 2 2 1 
+    0 1 0 e              0 8 b 7 
+    9 6 c d              1 a d b 
+    9 a e c              2 f b b 
+  Recombined input (X3 -> F2(X3) LED Round 1) : 94f209b98c16b557
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    e 5 d 3              7 2 2 1 
+    2 4 0 e              0 8 b 7 
+    b 5 c d              1 a d b 
+    a f e c              2 f b b 
+  Recombined after AC      : 97f22cb9af168057
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    1 d f b              f 0 d d 
+    6 2 d d              0 6 5 3 
+    e b 3 3              1 9 6 9 
+    3 3 f 8              0 f f 5 
+  Recombined after SC      : ed26648ef25a3c0d
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    1 d f b              f 0 d d 
+    2 d d 6              6 5 3 0 
+    3 3 e b              6 9 1 9 
+    8 3 3 f              5 0 f f 
+  Recombined after SR      : ed2648e65af2d3c0
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    3 c d 4              9 4 d d 
+    e f 0 5              6 6 9 d 
+    d 9 7 7              3 6 3 d 
+    3 c f 9              4 4 3 4 
+  Recombined after MCS     : a8098998ef4a78cd
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    3 c d 4              9 4 d d 
+    e f 0 5              6 6 9 d 
+    d 9 7 7              3 6 3 d 
+    3 c f 9              4 4 3 4 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : a8098998ef4a78cd
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    3 c d 4              9 4 d d 
+    e f 0 5              6 6 9 d 
+    d 9 7 7              3 6 3 d 
+    3 c f 9              4 4 3 4 
+  Recombined after AC      : a8098998ef4a78cd
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    e 9 9 8              1 a 5 6 
+    3 c c 1              0 2 2 2 
+    0 a c b              1 8 5 4 
+    d 4 c 5              0 7 8 2 
+  Recombined after SC      : f3ce3ee3129fd347
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    e 9 9 8              1 a 5 6 
+    c c 1 3              2 2 2 0 
+    c b 0 a              5 4 1 8 
+    5 d 4 c              2 0 7 8 
+  Recombined after SR      : f3ceee339f127d34
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    0 2 b 9              8 4 9 b 
+    3 3 9 c              a 4 6 e 
+    6 5 0 8              1 3 e 4 
+    d f 9 4              5 a 5 a 
+  Recombined after MCS     : 862297f276ec85ce
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : 02b9339c6508df94
+  F Share 1                : 849ba46e13e45a5a
+  F Share0 XOR Share1      : 862297f276ec85ce
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : a9697f79bbbdf1cd
+  F1 expected              : a9697f79bbbdf1cd
+  F1 verification          : PASS
+
+  F2 recombined            : 862297f276ec85ce
+  F2 expected              : 862297f276ec85ce
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 644d61489c3ff977
+  X2'                      : 94f209b98c16b557
+  X3'                      : fe045d75a8f53a0b
+  X4'                      : 4e3b878414951700
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 644d61489c3ff977
+  X1 expected              : 644d61489c3ff977
+  X1 verification          : PASS
+
+  X2 recombined            : 94f209b98c16b557
+  X2 expected              : 94f209b98c16b557
+  X2 verification          : PASS
+
+  X3 recombined            : fe045d75a8f53a0b
+  X3 expected              : fe045d75a8f53a0b
+  X3 verification          : PASS
+
+  X4 recombined            : 4e3b878414951700
+  X4 expected              : 4e3b878414951700
+  X4 verification          : PASS
+
+  ROUND 17 FINAL RESULT     : PASS
+
+==================================================================
+CILIPADI-MILD PERMUTATION ROUND 18
+==================================================================
+
+[S (ROUND INPUT)]
+------------------------------------------------------------------
+  X1                       : 644d61489c3ff977
+  X2                       : 94f209b98c16b557
+  X3                       : fe045d75a8f53a0b
+  X4                       : 4e3b878414951700
+
+==================================================================
+ROUND 18 : F1(X1)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X1 Share 0               : ad8e5b8aa785df6d
+  X1 Share 1               : c9c33ac23bba261a
+  X1 recombined            : 644d61489c3ff977
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X1 -> F1(X1) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    a d 8 e              c 9 c 3 
+    5 b 8 a              3 a c 2 
+    a 7 8 5              3 b b a 
+    d f 6 d              2 6 1 a 
+  Recombined input (X1 -> F1(X1) LED Round 1) : 644d61489c3ff977
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    a a 8 e              c 9 c 3 
+    4 9 8 a              3 a c 2 
+    8 0 8 5              3 b b a 
+    e d 6 d              2 6 1 a 
+  Recombined after AC      : 634d7348bb3fcb77
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    0 b e f              a 0 7 8 
+    0 8 f 9              d 3 6 a 
+    a 8 f 7              2 0 4 5 
+    f 5 7 0              b d a d 
+  Recombined after SC      : ab97db9388b248dd
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    0 b e f              a 0 7 8 
+    8 f 9 0              3 6 a d 
+    f 7 a 8              4 5 2 0 
+    0 f 5 7              d b d a 
+  Recombined after SR      : ab97b93db288d48d
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    5 6 9 4              c 9 8 c 
+    3 f 3 e              a a 6 d 
+    5 1 c 6              2 a a 8 
+    9 0 3 8              e 3 2 8 
+  Recombined after MCS     : 9f1895537b6e7310
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F1(X1) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    5 6 9 4              c 9 8 c 
+    3 f 3 e              a a 6 d 
+    5 1 c 6              2 a a 8 
+    9 0 3 8              e 3 2 8 
+  Recombined input (Previous MCS output -> F1(X1) LED Round 2) : 9f1895537b6e7310
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    5 6 9 4              c 9 8 c 
+    3 f 3 e              a a 6 d 
+    5 1 c 6              2 a a 8 
+    9 0 3 8              e 3 2 8 
+  Recombined after AC      : 9f1895537b6e7310
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    2 3 f 3              c 1 a 0 
+    e 4 1 c              0 4 1 7 
+    e d 7 5              3 5 d 4 
+    2 0 f 4              f b a 8 
+  Recombined after SC      : e253e00bd8a1db5c
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    2 3 f 3              c 1 a 0 
+    4 1 c e              4 1 7 0 
+    7 5 e d              d 4 3 5 
+    4 2 0 f              8 f b a 
+  Recombined after SR      : e25300bea1d8cdb5
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    a 3 a 6              b 0 a d 
+    b 3 c 1              8 d e b 
+    9 5 1 0              f 5 f 1 
+    d 7 3 d              3 a 2 4 
+  Recombined after MCS     : 130b3e2a60e1ed19
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : a3a6b3c19510d73d
+  F Share 1                : b0ad8debf5f13a24
+  F Share0 XOR Share1      : 130b3e2a60e1ed19
+
+==================================================================
+ROUND 18 : F2(X3)
+==================================================================
+
+[MASKED INPUT]
+------------------------------------------------------------------
+  X3 Share 0               : 53faed41270e3e96
+  X3 Share 1               : adfeb0348ffb049d
+  X3 recombined            : fe045d75a8f53a0b
+
+  +--------------------------------------------------------------+
+  | LED ROUND 1 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : X3 -> F2(X3) LED Round 1
+       Share 0              Share 1
+    ---------------      ---------------
+    5 3 f a              a d f e 
+    e d 4 1              b 0 3 4 
+    2 7 0 e              8 f f b 
+    3 e 9 6              0 4 9 d 
+  Recombined input (X3 -> F2(X3) LED Round 1) : fe045d75a8f53a0b
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    5 4 f a              a d f e 
+    c f 4 1              b 0 3 4 
+    0 0 0 e              8 f f b 
+    0 c 9 6              0 4 9 d 
+  Recombined after AC      : f9047f758ff5080b
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    b c 3 f              9 2 f 6 
+    e f c 0              3 d 1 0 
+    e 2 2 c              d 0 0 c 
+    e 9 8 5              2 a 4 d 
+  Recombined after SC      : 2ec9d2d03220c3c8
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    b c 3 f              9 2 f 6 
+    f c 0 e              d 1 0 3 
+    2 c e 2              0 c d 0 
+    5 e 9 8              d 2 a 4 
+  Recombined after SR      : 2ec92d0d20328c3c
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    b d 2 0              6 6 7 0 
+    4 f b c              4 0 4 4 
+    0 f 5 b              9 b d c 
+    4 0 f 8              e b 8 0 
+  Recombined after MCS     : db500ff89487ab78
+
+  +--------------------------------------------------------------+
+  | LED ROUND 2 : AddConstant -> SubCells(ISW) -> ShiftRows -> MixColumns |
+  +--------------------------------------------------------------+
+
+  INPUT SHARES : Previous MCS output -> F2(X3) LED Round 2
+       Share 0              Share 1
+    ---------------      ---------------
+    b d 2 0              6 6 7 0 
+    4 f b c              4 0 4 4 
+    0 f 5 b              9 b d c 
+    4 0 f 8              e b 8 0 
+  Recombined input (Previous MCS output -> F2(X3) LED Round 2) : db500ff89487ab78
+
+  AFTER AddConstant
+       Share 0              Share 1
+    ---------------      ---------------
+    b d 2 0              6 6 7 0 
+    4 f b c              4 0 4 4 
+    0 f 5 b              9 b d c 
+    4 0 f 8              e b 8 0 
+  Recombined after AC      : db500ff89487ab78
+
+  AFTER SubCells (ISW)
+       Share 0              Share 1
+    ---------------      ---------------
+    a 3 f 2              d b f e 
+    4 d c 1              8 f e 2 
+    d d d c              3 4 e 1 
+    9 b 5 9              6 3 8 a 
+  Recombined after SC      : 780cc223e93df8d3
+
+  AFTER ShiftRows
+       Share 0              Share 1
+    ---------------      ---------------
+    a 3 f 2              d b f e 
+    d c 1 4              f e 2 8 
+    d c d d              e 1 3 4 
+    9 9 b 5              a 6 3 8 
+  Recombined after SR      : 780c223c3de93f8d
+
+  AFTER MixColumns
+       Share 0              Share 1
+    ---------------      ---------------
+    b a 4 f              6 a b e 
+    8 f 4 9              c 7 8 e 
+    e 6 a 8              0 b 9 b 
+    5 9 1 a              3 a 5 2 
+  Recombined after MCS     : d0f148c7ed336348
+
+[FINAL MASKED F OUTPUT]
+------------------------------------------------------------------
+  F Share 0                : ba4f8f49e6a8591a
+  F Share 1                : 6abec78e0b9b3a52
+  F Share0 XOR Share1      : d0f148c7ed336348
+
+[F OUTPUT VERIFICATION]
+------------------------------------------------------------------
+  F1 recombined            : 130b3e2a60e1ed19
+  F1 expected              : 130b3e2a60e1ed19
+  F1 verification          : PASS
+
+  F2 recombined            : d0f148c7ed336348
+  F2 expected              : d0f148c7ed336348
+  F2 verification          : PASS
+
+[CILIPADI BRANCH UPDATE]
+------------------------------------------------------------------
+  X1' = X2 XOR F1(X1)
+  X2' = X3
+  X3' = X4 XOR F2(X3)
+  X4' = X1
+
+  X1'                      : 87f93793ecf7584e
+  X2'                      : fe045d75a8f53a0b
+  X3'                      : 9ecacf43f9a67448
+  X4'                      : 644d61489c3ff977
+
+[ROUND STATE VERIFICATION]
+------------------------------------------------------------------
+  X1 recombined            : 87f93793ecf7584e
+  X1 expected              : 87f93793ecf7584e
+  X1 verification          : PASS
+
+  X2 recombined            : fe045d75a8f53a0b
+  X2 expected              : fe045d75a8f53a0b
+  X2 verification          : PASS
+
+  X3 recombined            : 9ecacf43f9a67448
+  X3 expected              : 9ecacf43f9a67448
+  X3 verification          : PASS
+
+  X4 recombined            : 644d61489c3ff977
+  X4 expected              : 644d61489c3ff977
+  X4 verification          : PASS
+
+  ROUND 18 FINAL RESULT     : PASS
+
+==================================================================
+FINAL 18-ROUND VERIFICATION
+==================================================================
+
+  Overall result           : PASS
+
+  Final S (R18 output):
+  X1                       : 87f93793ecf7584e
+  X2                       : fe045d75a8f53a0b
+  X3                       : 9ecacf43f9a67448
+  X4                       : 644d61489c3ff977
+
+  Expected final state:
+    87f93793ecf7584e
+    fe045d75a8f53a0b
+    9ecacf43f9a67448
+    644d61489c3ff977
+
+  NOTE: PASS verifies functional equivalence with the supplied
+  CiliPadi-Mild trace. It is not by itself a leakage-security proof.
+
