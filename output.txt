@@ -1,0 +1,181 @@
+Educational masking demo: printed shares/intermediates are NOT secret.
+One outer permutation round; two LED rounds per F; constants exactly as supplied.
+X1
+  share 0: 541d093c6d1b1732
+  share 1: 541c0b3f691e1135
+  XOR    : 0001020304050607
+X2
+  share 0: ef25dfe238d1af70
+  share 1: e72cd5e934dca17f
+  XOR    : 08090a0b0c0d0e0f
+X3
+  share 0: 8791bc855294beed
+  share 1: 8790be865691b8ea
+  XOR    : 0001020304050607
+X4
+  share 0: e331ce164c5b354f
+  share 1: eb38c41d40563b40
+  XOR    : 08090a0b0c0d0e0f
+
+F1 LED round 1
+after AddConstants (AC)
+  share 0: 541d183c4d1b2632
+  share 1: 541c0b3f691e1135
+  XOR    : 0001130324053707
+  0 0 0 1 
+  1 3 0 3 
+  2 4 0 5 
+  3 7 0 7 
+after SubCells (SC)
+  share 0: ae66ec091ac6a50a
+  share 1: 62a3b7c2730618c7
+  XOR    : ccc55bcb69c0bdcd
+  c c c 5 
+  5 b c b 
+  6 9 c 0 
+  b d c d 
+after ShiftRows (SR)
+  share 0: ae66c09ec61aaa50
+  share 1: 62a37c2b0673718c
+  XOR    : ccc5bcb5c069dbdc
+  c c c 5 
+  b c b 5 
+  c 0 6 9 
+  d b d c 
+after MixColumnsSerial (MCS)
+  share 0: e6a21de3249c693f
+  share 1: 2a1a56e591ad60fc
+  XOR    : ccb84b06b53109c3
+  c c b 8 
+  4 b 0 6 
+  b 5 3 1 
+  0 9 c 3 
+
+F1 LED round 2
+after AddConstants (AC)
+  share 0: e6a21de3249c693f
+  share 1: 2a1a56e591ad60fc
+  XOR    : ccb84b06b53109c3
+  c c b 8 
+  4 b 0 6 
+  b 5 3 1 
+  0 9 c 3 
+after SubCells (SC)
+  share 0: 3c976525695d3d08
+  share 1: 7814fdefe9e8f343
+  XOR    : 448398ca80b5ce4b
+  4 4 8 3 
+  9 8 c a 
+  8 0 b 5 
+  c e 4 b 
+after ShiftRows (SR)
+  share 0: 3c9752565d6983d0
+  share 1: 7814deffe8e93f34
+  XOR    : 44838ca9b580bce4
+  4 4 8 3 
+  8 c a 9 
+  b 5 8 0 
+  b c e 4 
+after MixColumnsSerial (MCS)
+  share 0: 082810c1d193d69c
+  share 1: b625c4520d08ce41
+  XOR    : be0dd493dc9b18dd
+  b e 0 d 
+  d 4 9 3 
+  d c 9 b 
+  1 8 d d 
+
+F2 LED round 1
+after AddConstants (AC)
+  share 0: 87919d8572948fed
+  share 1: 8790be865691b8ea
+  XOR    : 0001230324053707
+  0 0 0 1 
+  2 3 0 3 
+  2 4 0 5 
+  3 7 0 7 
+after SubCells (SC)
+  share 0: 60b44be4521a7d0d
+  share 1: ac71202f3bdac0c0
+  XOR    : ccc56bcb69c0bdcd
+  c c c 5 
+  6 b c b 
+  6 9 c 0 
+  b d c d 
+after ShiftRows (SR)
+  share 0: 60b4be441a52d7d0
+  share 1: ac7102f2da3b0c0c
+  XOR    : ccc5bcb6c069dbdc
+  c c c 5 
+  b c b 6 
+  c 0 6 9 
+  d b d c 
+after MixColumnsSerial (MCS)
+  share 0: b7d3776729f007dd
+  share 1: 7b683c6b9cc00e18
+  XOR    : ccbb4b0cb53009c5
+  c c b b 
+  4 b 0 c 
+  b 5 3 0 
+  0 9 c 5 
+
+F2 LED round 2
+after AddConstants (AC)
+  share 0: b7d3776729f007dd
+  share 1: 7b683c6b9cc00e18
+  XOR    : ccbb4b0cb53009c5
+  c c b b 
+  4 b 0 c 
+  b 5 3 0 
+  0 9 c 5 
+after SubCells (SC)
+  share 0: a4baacc3f142ca26
+  share 1: e032340771fe0466
+  XOR    : 448898c480bcce40
+  4 4 8 8 
+  9 8 c 4 
+  8 0 b c 
+  c e 4 0 
+after ShiftRows (SR)
+  share 0: a4bacc3a42f16ca2
+  share 1: e0324073fe716046
+  XOR    : 44888c49bc800ce4
+  4 4 8 8 
+  8 c 4 9 
+  b c 8 0 
+  0 c e 4 
+after MixColumnsSerial (MCS)
+  share 0: 60321c2fbf1fa3ba
+  share 1: 8fd5339ba63d2592
+  XOR    : efe72fb419228628
+  e f e 7 
+  2 f b 4 
+  1 9 2 2 
+  8 6 2 8 
+F1 output (U0,U1)
+  share 0: 082810c1d193d69c
+  share 1: b625c4520d08ce41
+  XOR    : be0dd493dc9b18dd
+F2 output (V0,V1)
+  share 0: 60321c2fbf1fa3ba
+  share 1: 8fd5339ba63d2592
+  XOR    : efe72fb419228628
+Y1
+  share 0: e70dcf23e94279ec
+  share 1: 510911bb39d46f3e
+  XOR    : b604de98d09616d2
+Y2
+  share 0: 8791bc855294beed
+  share 1: 8790be865691b8ea
+  XOR    : 0001020304050607
+Y3
+  share 0: 8303d239f34496f5
+  share 1: 64edf786e66b1ed2
+  XOR    : e7ee25bf152f8827
+Y4
+  share 0: 541d093c6d1b1732
+  share 1: 541c0b3f691e1135
+  XOR    : 0001020304050607
+Fresh random bits requested inside F1+F2: 2368
+Initial sharing additionally used 256 mask bits; byte-oriented RNG deliberately wastes unused bits.
+PASS: both supplied F outputs match.
