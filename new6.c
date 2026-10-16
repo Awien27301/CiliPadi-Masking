@@ -1,0 +1,685 @@
+/*
+ * ================================================================
+ * CiliPadi-Mild - Full 18-Round Masked Permutation
+ * First-Order Boolean Masking + ISW
+ * ================================================================
+ *
+ * REAL CILIPADI-MILD DATA:
+ *   Initial state and round constants retained from source code.
+ *
+ * Scope:
+ *   - Full 18-round CiliPadi branch update
+ *   - Masked F1(X1) and F2(X3)
+ *   - Display masked intermediate states without verification
+ *
+ * Flow:
+ *   Secret -> Random Mask -> Share0/Share1
+ *          -> AddConstant
+ *          -> PRESENT S-box using ISW AND
+ *          -> ShiftRows
+ *          -> MixColumns
+ *          -> LED Round 2
+ *          -> Display resulting state
+ *
+ * Compile:
+ *   gcc -std=c11 -Wall -Wextra CiliPadi_Mild_18Round_ISW_NoVerification.c \
+ *       -o CiliPadi_Mild_18Round_ISW_NoVerification
+ *
+ * Run:
+ *   ./CiliPadi_Mild_18Round_ISW_NoVerification
+ *
+ * Save output:
+ *   ./CiliPadi_Mild_18Round_ISW_NoVerification > CiliPadi_Mild_18Round_ISW_NoVerification.txt
+ * ================================================================
+ */
+
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
+#include <time.h>
+
+typedef uint8_t u8;
+
+typedef struct {
+    u8 s0;
+    u8 s1;
+} mbit;
+
+/* ================================================================
+ * FRESH RANDOMNESS
+ *
+ * New randomness is generated every time the program runs.
+ *
+ * Primary source:
+ *   /dev/urandom
+ *
+ * Used for:
+ *   - Share 0 random masks
+ *   - Share 1 derivation
+ *   - Fresh random bit r in every ISW AND
+ *
+ * The CiliPadi-Mild data itself is NOT random.
+ * X1, X3, round constants, and expected F outputs come directly
+ * from the supplied cilipadi-mild-steps(5).txt trace.
+ * ================================================================ */
+
+static uint32_t fallback_state = 0;
+
+static uint32_t fallback_rng32(void)
+{
+    if (fallback_state == 0) {
+        fallback_state = (uint32_t)time(NULL)
+                       ^ (uint32_t)(uintptr_t)&fallback_state;
+    }
+
+    uint32_t x = fallback_state;
+    x ^= x << 13;
+    x ^= x >> 17;
+    x ^= x << 5;
+    fallback_state = x;
+    return x;
+}
+
+static u8 secure_random_byte(void)
+{
+    FILE *fp = fopen("/dev/urandom", "rb");
+
+    if (fp != NULL) {
+        u8 b;
+        size_t n = fread(&b, 1, 1, fp);
+        fclose(fp);
+
+        if (n == 1)
+            return b;
+    }
+
+    return (u8)(fallback_rng32() & 0xFF);
+}
+
+static u8 rand_nibble(void)
+{
+    return (u8)(secure_random_byte() & 0x0F);
+}
+
+static u8 rand_bit(void)
+{
+    return (u8)(secure_random_byte() & 0x01);
+}
+
+/* ================================================================
+ * PRINTING
+ * ================================================================ */
+static void line(void)
+{
+    printf("------------------------------------------------------------------\n");
+}
+
+static void title(const char *s)
+{
+    printf("\n==================================================================\n");
+    printf("%s\n", s);
+    printf("==================================================================\n");
+}
+
+static void subtitle(const char *s)
+{
+    printf("\n[%s]\n", s);
+    line();
+}
+
+static void print_hex64(const char *label, const u8 s[16])
+{
+    printf("  %-24s : ", label);
+    for (int i = 0; i < 16; i++)
+        printf("%x", s[i] & 0xF);
+    printf("\n");
+}
+
+static void print_matrix_pair(const char *label,
+                              const u8 s0[16], const u8 s1[16])
+{
+    printf("\n  %s\n", label);
+    printf("       Share 0              Share 1\n");
+    printf("    ---------------      ---------------\n");
+
+    for (int r = 0; r < 4; r++) {
+        printf("    ");
+        for (int c = 0; c < 4; c++)
+            printf("%x ", s0[4*r+c] & 0xF);
+
+        printf("             ");
+
+        for (int c = 0; c < 4; c++)
+            printf("%x ", s1[4*r+c] & 0xF);
+
+        printf("\n");
+    }
+}
+
+static void xor16(u8 out[16], const u8 a[16], const u8 b[16])
+{
+    for (int i = 0; i < 16; i++)
+        out[i] = (u8)((a[i] ^ b[i]) & 0xF);
+}
+
+static void recombine(u8 out[16], const u8 s0[16], const u8 s1[16])
+{
+    xor16(out, s0, s1);
+}
+
+/* ================================================================
+ * GF(16)
+ * Polynomial: x^4 + x + 1
+ * ================================================================ */
+static u8 gf16_mul(u8 a, u8 b)
+{
+    u8 p = 0;
+    a &= 0xF;
+    b &= 0xF;
+
+    for (int i = 0; i < 4; i++) {
+        if (b & 1)
+            p ^= a;
+
+        u8 hi = a & 0x8;
+        a = (u8)((a << 1) & 0xF);
+
+        if (hi)
+            a ^= 0x3;
+
+        b >>= 1;
+    }
+
+    return p & 0xF;
+}
+
+/* ================================================================
+ * LED LINEAR LAYERS
+ * ================================================================ */
+static const u8 MDS[4][4] = {
+    {0x4, 0x1, 0x2, 0x2},
+    {0x8, 0x6, 0x5, 0x6},
+    {0xB, 0xE, 0xA, 0x9},
+    {0x2, 0x2, 0xF, 0xB}
+};
+
+static void shift_rows(u8 s[16])
+{
+    u8 t[16];
+
+    for (int r = 0; r < 4; r++)
+        for (int c = 0; c < 4; c++)
+            t[4*r+c] = s[4*r + ((c+r) & 3)];
+
+    memcpy(s, t, 16);
+}
+
+static void mix_columns(u8 s[16])
+{
+    u8 t[16] = {0};
+
+    for (int c = 0; c < 4; c++) {
+        for (int r = 0; r < 4; r++) {
+            u8 v = 0;
+            for (int k = 0; k < 4; k++)
+                v ^= gf16_mul(MDS[r][k], s[4*k+c]);
+
+            t[4*r+c] = v & 0xF;
+        }
+    }
+
+    memcpy(s, t, 16);
+}
+
+/* ================================================================
+ * PRESENT S-BOX
+ * ================================================================ */
+/* ================================================================
+ * FIRST-ORDER ISW AND
+ *
+ * a = a0 XOR a1
+ * b = b0 XOR b1
+ *
+ * z0 = (a0 & b0) XOR r
+ * z1 = (a1 & b1) XOR (a0 & b1)
+ *      XOR (a1 & b0) XOR r
+ * ================================================================ */
+static mbit isw_and(mbit a, mbit b)
+{
+    u8 r = rand_bit();
+
+    mbit z;
+    z.s0 = (u8)(((a.s0 & b.s0) ^ r) & 1);
+    z.s1 = (u8)(((a.s1 & b.s1)
+               ^ (a.s0 & b.s1)
+               ^ (a.s1 & b.s0)
+               ^ r) & 1);
+
+    return z;
+}
+
+static mbit mbit_xor(mbit a, mbit b)
+{
+    mbit z = {
+        (u8)((a.s0 ^ b.s0) & 1),
+        (u8)((a.s1 ^ b.s1) & 1)
+    };
+    return z;
+}
+
+static mbit masked_monomial(const mbit x[4], unsigned mask)
+{
+    if (mask == 0) {
+        mbit one = {1, 0};
+        return one;
+    }
+
+    int first = -1;
+
+    for (int i = 0; i < 4; i++) {
+        if (mask & (1u << i)) {
+            first = i;
+            break;
+        }
+    }
+
+    mbit acc = x[first];
+
+    for (int i = first + 1; i < 4; i++) {
+        if (mask & (1u << i))
+            acc = isw_and(acc, x[i]);
+    }
+
+    return acc;
+}
+
+/*
+ * PRESENT S-box ANF.
+ */
+static void masked_present_sbox(u8 in0, u8 in1, u8 *out0, u8 *out1)
+{
+    static const unsigned anf[4][8] = {
+        {0x1,0x4,0x6,0x8,0,0,0,0},
+        {0x2,0x7,0x8,0xA,0xB,0xC,0xD,0},
+        {0x0,0x3,0x4,0x8,0x9,0xA,0xB,0xD},
+        {0x0,0x1,0x2,0x6,0x7,0x8,0xB,0xD}
+    };
+
+    static const int terms[4] = {4,7,8,8};
+
+    mbit x[4];
+
+    for (int b = 0; b < 4; b++) {
+        x[b].s0 = (u8)((in0 >> b) & 1);
+        x[b].s1 = (u8)((in1 >> b) & 1);
+    }
+
+    u8 a0 = 0;
+    u8 a1 = 0;
+
+    for (int ob = 0; ob < 4; ob++) {
+        mbit y = {0,0};
+
+        for (int j = 0; j < terms[ob]; j++) {
+            mbit m = masked_monomial(x, anf[ob][j]);
+            y = mbit_xor(y, m);
+        }
+
+        a0 |= (u8)((y.s0 & 1) << ob);
+        a1 |= (u8)((y.s1 & 1) << ob);
+    }
+
+    *out0 = a0 & 0xF;
+    *out1 = a1 & 0xF;
+}
+
+static void masked_sub_cells(u8 s0[16], u8 s1[16])
+{
+    for (int i = 0; i < 16; i++) {
+        u8 o0, o1;
+
+        masked_present_sbox(s0[i], s1[i], &o0, &o1);
+
+        s0[i] = o0;
+        s1[i] = o1;
+    }
+}
+
+/* ================================================================
+ * MASKING
+ * ================================================================ */
+static void mask_state(const u8 secret[16], u8 s0[16], u8 s1[16])
+{
+    for (int i = 0; i < 16; i++) {
+        s0[i] = rand_nibble();
+        s1[i] = (u8)((secret[i] ^ s0[i]) & 0xF);
+    }
+}
+
+/*
+ * Public round constant is applied to share 0 only:
+ *
+ * (Share0 XOR RC) XOR Share1
+ * = Secret XOR RC
+ */
+static void masked_add_constant(u8 s0[16], const u8 rc[16])
+{
+    for (int i = 0; i < 16; i++)
+        s0[i] ^= rc[i];
+}
+
+/* ================================================================
+ * CLEAN MASKED LED ROUND OUTPUT
+ * ================================================================ */
+static void led_round_masked(u8 s0[16], u8 s1[16],
+                             const u8 rc[16],
+                             const char *round_name,
+                             const char *input_name)
+{
+    printf("\n    %s\n", round_name);
+    printf("    input: %s\n", input_name);
+    print_matrix_pair("input:", s0, s1);
+    u8 zero_share[16] = {0};
+    print_matrix_pair("round constants (Share 0 only):", rc, zero_share);
+
+    masked_add_constant(s0, rc);
+    print_matrix_pair("after AC:", s0, s1);
+
+    masked_sub_cells(s0, s1);
+    print_matrix_pair("after SC (ISW):", s0, s1);
+
+    shift_rows(s0);
+    shift_rows(s1);
+    print_matrix_pair("after SR:", s0, s1);
+
+    mix_columns(s0);
+    mix_columns(s1);
+    print_matrix_pair("after MCS:", s0, s1);
+}
+
+
+/* ================================================================
+ * FULL 18-ROUND CILIPADI-MILD INIT PERMUTATION
+ * First-Order Boolean Masking + ISW
+ *
+ * Source of fixed values:
+ *   cilipadi-mild-steps(5).txt
+ *
+ * IMPORTANT:
+ *   - Fresh random masks are generated at program start.
+ *   - Fresh random bits are generated inside every ISW AND.
+ *   - X1/X2/X3/X4 are carried from one round to the next using
+ *     the real CiliPadi-Mild branch update.
+ *
+ * Branch update:
+ *   X1' = X2 XOR F1(X1)
+ *   X2' = X3
+ *   X3' = X4 XOR F2(X3)
+ *   X4' = X1
+ * ================================================================ */
+
+static const u8 ZERO_RC[16] = {
+    0,0,0,0,
+    0,0,0,0,
+    0,0,0,0,
+    0,0,0,0
+};
+
+/* Real LED Round-1 constants for F1, Round 1..18 */
+static const u8 F1_RC[18][16] = {
+    {0x0, 0x0, 0x0, 0x0, 0x1, 0x1, 0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x3, 0x1, 0x0, 0x0},
+    {0x0, 0x0, 0x0, 0x0, 0x1, 0x3, 0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x3, 0x3, 0x0, 0x0},
+    {0x0, 0x0, 0x0, 0x0, 0x1, 0x7, 0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x3, 0x7, 0x0, 0x0},
+    {0x0, 0x1, 0x0, 0x0, 0x1, 0x7, 0x0, 0x0, 0x2, 0x1, 0x0, 0x0, 0x3, 0x7, 0x0, 0x0},
+    {0x0, 0x3, 0x0, 0x0, 0x1, 0x7, 0x0, 0x0, 0x2, 0x3, 0x0, 0x0, 0x3, 0x7, 0x0, 0x0},
+    {0x0, 0x7, 0x0, 0x0, 0x1, 0x6, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x3, 0x6, 0x0, 0x0},
+    {0x0, 0x7, 0x0, 0x0, 0x1, 0x5, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x3, 0x5, 0x0, 0x0},
+    {0x0, 0x7, 0x0, 0x0, 0x1, 0x3, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x3, 0x3, 0x0, 0x0},
+    {0x0, 0x6, 0x0, 0x0, 0x1, 0x7, 0x0, 0x0, 0x2, 0x6, 0x0, 0x0, 0x3, 0x7, 0x0, 0x0},
+    {0x0, 0x5, 0x0, 0x0, 0x1, 0x7, 0x0, 0x0, 0x2, 0x5, 0x0, 0x0, 0x3, 0x7, 0x0, 0x0},
+    {0x0, 0x3, 0x0, 0x0, 0x1, 0x6, 0x0, 0x0, 0x2, 0x3, 0x0, 0x0, 0x3, 0x6, 0x0, 0x0},
+    {0x0, 0x7, 0x0, 0x0, 0x1, 0x4, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x3, 0x4, 0x0, 0x0},
+    {0x0, 0x7, 0x0, 0x0, 0x1, 0x1, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x3, 0x1, 0x0, 0x0},
+    {0x0, 0x6, 0x0, 0x0, 0x1, 0x3, 0x0, 0x0, 0x2, 0x6, 0x0, 0x0, 0x3, 0x3, 0x0, 0x0},
+    {0x0, 0x4, 0x0, 0x0, 0x1, 0x7, 0x0, 0x0, 0x2, 0x4, 0x0, 0x0, 0x3, 0x7, 0x0, 0x0},
+    {0x0, 0x1, 0x0, 0x0, 0x1, 0x6, 0x0, 0x0, 0x2, 0x1, 0x0, 0x0, 0x3, 0x6, 0x0, 0x0},
+    {0x0, 0x3, 0x0, 0x0, 0x1, 0x5, 0x0, 0x0, 0x2, 0x3, 0x0, 0x0, 0x3, 0x5, 0x0, 0x0},
+    {0x0, 0x7, 0x0, 0x0, 0x1, 0x2, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x3, 0x2, 0x0, 0x0}
+};
+
+/* Real LED Round-1 constants for F2, Round 1..18 */
+static const u8 F2_RC[18][16] = {
+    {0x0, 0x0, 0x0, 0x0, 0x2, 0x1, 0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x3, 0x1, 0x0, 0x0},
+    {0x0, 0x0, 0x0, 0x0, 0x2, 0x3, 0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x3, 0x3, 0x0, 0x0},
+    {0x0, 0x0, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x3, 0x7, 0x0, 0x0},
+    {0x0, 0x1, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x2, 0x1, 0x0, 0x0, 0x3, 0x7, 0x0, 0x0},
+    {0x0, 0x3, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x2, 0x3, 0x0, 0x0, 0x3, 0x7, 0x0, 0x0},
+    {0x0, 0x7, 0x0, 0x0, 0x2, 0x6, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x3, 0x6, 0x0, 0x0},
+    {0x0, 0x7, 0x0, 0x0, 0x2, 0x5, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x3, 0x5, 0x0, 0x0},
+    {0x0, 0x7, 0x0, 0x0, 0x2, 0x3, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x3, 0x3, 0x0, 0x0},
+    {0x0, 0x6, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x2, 0x6, 0x0, 0x0, 0x3, 0x7, 0x0, 0x0},
+    {0x0, 0x5, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x2, 0x5, 0x0, 0x0, 0x3, 0x7, 0x0, 0x0},
+    {0x0, 0x3, 0x0, 0x0, 0x2, 0x6, 0x0, 0x0, 0x2, 0x3, 0x0, 0x0, 0x3, 0x6, 0x0, 0x0},
+    {0x0, 0x7, 0x0, 0x0, 0x2, 0x4, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x3, 0x4, 0x0, 0x0},
+    {0x0, 0x7, 0x0, 0x0, 0x2, 0x1, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x3, 0x1, 0x0, 0x0},
+    {0x0, 0x6, 0x0, 0x0, 0x2, 0x3, 0x0, 0x0, 0x2, 0x6, 0x0, 0x0, 0x3, 0x3, 0x0, 0x0},
+    {0x0, 0x4, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x2, 0x4, 0x0, 0x0, 0x3, 0x7, 0x0, 0x0},
+    {0x0, 0x1, 0x0, 0x0, 0x2, 0x6, 0x0, 0x0, 0x2, 0x1, 0x0, 0x0, 0x3, 0x6, 0x0, 0x0},
+    {0x0, 0x3, 0x0, 0x0, 0x2, 0x5, 0x0, 0x0, 0x2, 0x3, 0x0, 0x0, 0x3, 0x5, 0x0, 0x0},
+    {0x0, 0x7, 0x0, 0x0, 0x2, 0x2, 0x0, 0x0, 0x2, 0x7, 0x0, 0x0, 0x3, 0x2, 0x0, 0x0}
+};
+
+/* Real CiliPadi-Mild INIT state */
+static const u8 INITIAL_STATE[4][16] = {
+    {0x0, 0x0, 0x0, 0x1, 0x0, 0x2, 0x0, 0x3, 0x0, 0x4, 0x0, 0x5, 0x0, 0x6, 0x0, 0x7},
+    {0x0, 0x8, 0x0, 0x9, 0x0, 0xA, 0x0, 0xB, 0x0, 0xC, 0x0, 0xD, 0x0, 0xE, 0x0, 0xF},
+    {0x0, 0x0, 0x0, 0x1, 0x0, 0x2, 0x0, 0x3, 0x0, 0x4, 0x0, 0x5, 0x0, 0x6, 0x0, 0x7},
+    {0x0, 0x8, 0x0, 0x9, 0x0, 0xA, 0x0, 0xB, 0x0, 0xC, 0x0, 0xD, 0x0, 0xE, 0x0, 0xF}
+};
+
+static void copy16(u8 dst[16], const u8 src[16])
+{
+    memcpy(dst, src, 16);
+}
+
+static void xor_share_pair(u8 out0[16], u8 out1[16],
+                           const u8 a0[16], const u8 a1[16],
+                           const u8 b0[16], const u8 b1[16])
+{
+    for (int i = 0; i < 16; i++) {
+        out0[i] = (u8)((a0[i] ^ b0[i]) & 0xF);
+        out1[i] = (u8)((a1[i] ^ b1[i]) & 0xF);
+    }
+}
+
+static void F_masked_full(int round_no,
+                          const char *fname,
+                          const char *source_name,
+                          u8 out0[16], u8 out1[16],
+                          const u8 in0[16], const u8 in1[16],
+                          const u8 rc1[16])
+{
+    memcpy(out0, in0, 16);
+    memcpy(out1, in1, 16);
+
+    char heading[128];
+    snprintf(heading, sizeof(heading),
+             "ROUND %d : %s", round_no, fname);
+    title(heading);
+
+    subtitle("MASKED INPUT");
+
+    char lab0[64], lab1[64];
+    snprintf(lab0, sizeof(lab0), "%s Share 0", source_name);
+    snprintf(lab1, sizeof(lab1), "%s Share 1", source_name);
+
+    print_hex64(lab0, out0);
+    print_hex64(lab1, out1);
+
+
+    char in_r1[128], in_r2[128];
+    snprintf(in_r1, sizeof(in_r1),
+             "%s -> %s LED Round 1", source_name, fname);
+    snprintf(in_r2, sizeof(in_r2),
+             "Previous MCS output -> %s LED Round 2", fname);
+
+    led_round_masked(
+        out0, out1, rc1,
+        "LED round 1",
+        in_r1
+    );
+
+    led_round_masked(
+        out0, out1, ZERO_RC,
+        "LED round 2",
+        in_r2
+    );
+
+    subtitle("FINAL MASKED F OUTPUT");
+    print_hex64("F Share 0", out0);
+    print_hex64("F Share 1", out1);
+
+}
+
+int main(void)
+{
+    u8 S0[4][16], S1[4][16];
+
+    title("CILIPADI-MILD FULL 18-ROUND MASKED PERMUTATION");
+
+    printf("\n");
+    printf("ENCRYPTION\n");
+    printf("--------------------------------------------------------------\n");
+    printf("Plaintext  : 0001020304050607 08090a0b0c0d0e0f\n");
+    printf("Key        : 0001020304050607 08090a0b0c0d0e0f\n");
+    printf("Nonce      : 0001020304050607 08090a0b0c0d0e0f\n");
+    printf("AD         : 0001020304050607 08090a0b0c0d0e0f\n");
+    printf("Ciphertext : 3fb9e70d3702c712 d407f60f617e43d3\n");
+    printf("Tag        : 68b96217dd237301\n");
+
+    printf("\n");
+    printf("DECRYPTION\n");
+    printf("--------------------------------------------------------------\n");
+    printf("Ciphertext : 3fb9e70d3702c712 d407f60f617e43d3\n");
+    printf("Key        : 0001020304050607 08090a0b0c0d0e0f\n");
+    printf("Nonce      : 0001020304050607 08090a0b0c0d0e0f\n");
+    printf("Plaintext  : 0001020304050607 08090a0b0c0d0e0f\n");
+    printf("AD         : 0001020304050607 08090a0b0c0d0e0f\n");
+    printf("Plaintext  : 0001020304050607 08090a0b0c0d0e0f\n");
+
+    printf("\n");
+    printf("  Flow per round:\n");
+    printf("    X1 -> F1 -> 2 LED rounds\n");
+    printf("    X3 -> F2 -> 2 LED rounds\n");
+    printf("\n");
+    printf("  Random masks and ISW fresh random bits change every run.\n");
+
+    subtitle("REAL INITIAL STATE");
+
+    for (int b = 0; b < 4; b++) {
+        char label[16];
+        snprintf(label, sizeof(label), "X%d", b + 1);
+        print_hex64(label, INITIAL_STATE[b]);
+
+        mask_state(INITIAL_STATE[b], S0[b], S1[b]);
+    }
+
+    subtitle("INITIAL MASKED SHARES");
+
+    for (int b = 0; b < 4; b++) {
+        print_hex64(b == 0 ? "X1 Share 0" :
+                    b == 1 ? "X2 Share 0" :
+                    b == 2 ? "X3 Share 0" : "X4 Share 0",
+                    S0[b]);
+
+        print_hex64(b == 0 ? "X1 Share 1" :
+                    b == 1 ? "X2 Share 1" :
+                    b == 2 ? "X3 Share 1" : "X4 Share 1",
+                    S1[b]);
+
+        printf("\n");
+    }
+
+    for (int r = 0; r < 18; r++) {
+        char round_title[80];
+        snprintf(round_title, sizeof(round_title),
+                 "CILIPADI-MILD PERMUTATION ROUND %d", r + 1);
+        title(round_title);
+
+        subtitle("S (ROUND INPUT)");
+
+        for (int b = 0; b < 4; b++) {
+            u8 rec[16];
+            char label[32];
+            recombine(rec, S0[b], S1[b]);
+            snprintf(label, sizeof(label), "X%d", b + 1);
+            print_hex64(label, rec);
+        }
+
+        u8 F10[16], F11[16];
+        u8 F20[16], F21[16];
+
+        /* F1 operates on X1 */
+        F_masked_full(r + 1, "F1(X1)", "X1",
+                      F10, F11, S0[0], S1[0], F1_RC[r]);
+
+        /* F2 operates on X3 */
+        F_masked_full(r + 1, "F2(X3)", "X3",
+                      F20, F21, S0[2], S1[2], F2_RC[r]);
+
+        /* ------------------------------------------------------------
+         * TRUE CILIPADI-MILD BRANCH UPDATE, performed share-wise.
+         *
+         * X1' = X2 XOR F1(X1)
+         * X2' = X3
+         * X3' = X4 XOR F2(X3)
+         * X4' = X1
+         * ------------------------------------------------------------ */
+
+        u8 N0[4][16], N1[4][16];
+
+        xor_share_pair(N0[0], N1[0],
+                       S0[1], S1[1],
+                       F10, F11);
+
+        copy16(N0[1], S0[2]);
+        copy16(N1[1], S1[2]);
+
+        xor_share_pair(N0[2], N1[2],
+                       S0[3], S1[3],
+                       F20, F21);
+
+        copy16(N0[3], S0[0]);
+        copy16(N1[3], S1[0]);
+
+        subtitle("S (ROUND OUTPUT)");
+
+        for (int b = 0; b < 4; b++) {
+            u8 rec[16];
+            char label[32];
+            recombine(rec, N0[b], N1[b]);
+            snprintf(label, sizeof(label), "X%d'", b + 1);
+            print_hex64(label, rec);
+        }
+
+        /* Move to next round */
+        memcpy(S0, N0, sizeof(S0));
+        memcpy(S1, N1, sizeof(S1));
+
+    }
+
+    title("FINAL 18-ROUND STATE");
+
+    u8 final_rec[16];
+    printf("\n  Final S (R18 output):\n");
+
+    for (int b = 0; b < 4; b++) {
+        char label[32];
+        recombine(final_rec, S0[b], S1[b]);
+        snprintf(label, sizeof(label), "X%d", b + 1);
+        print_hex64(label, final_rec);
+    }
+
+    return 0;
+}
